@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC:400,500,700.900');
+/*
+    body: 1920 * 1080
+    main: 1600 * 900
+    messages: 320 * 730
+*/
+* {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    font-family: Noto Sans TC;
+    vertical-align: baseline;
+    line-height: 1.4;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+#navbar {
+    background-color: #000;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: calc(1920 * 100vw / 1920);
+    height: calc(1080 * 100vh / 1080);
+}
+
+#navbar p {
+    font-size: 22px;
+    color: #FFF;
+    vertical-align: baseline;
+    line-height: calc(1080 * 100vh / 1080);
+    padding-left: 22px;
+}

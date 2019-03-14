@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC:400,500,700.900');
+/*
+    body: 1920 * 1080
+    main: 1600 * 900
+    messages: 320 * 730
+*/
+* {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    font-family: Noto Sans TC;
+    vertical-align: baseline;
+    line-height: 1.4;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+body {
+    background-image: url("./R0Template.png");
+    background-size: calc(1920 * 100vw / 1920) calc(1080 * 100vh / 1080);
+}
+
+
+.from {
+    display: none;
+}
+
+.log-title {
+    display: none;
+}
+
+#messages {
+    width: calc(1920 * 100vw / 1920 + 18px);
+    height: calc(730 * 100vh / 1080);
+    position: fixed;
+    left: 0px;
+    top: calc(100 * 100vh / 1080);
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    box-shadow: 0 0 10px rgba(40,40,40,.5);
+    color: #FFF;
+    background-color: #000;
+}
+
+#messages .title {
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+#messages .time {
+    height: 24px;
+    background-color: #FFF;
+    color: #000;
+    display: flex;
+    justify-content: start;
+}
+
+#messages .time::after {
+    border-top: solid 22px black;
+    border-left: solid 24px white;
+    border-bottom: solid 2px white;
+    content: '';
+    flex-grow: 1;
+}
+
+#messages .time a {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: inherit;
+    font-size: 16px;
+    background-color: #FFF;
+    padding: 2px 8px 2px;
+    vertical-align: baseline;
+}
+
+#messages .word {
+    background-color: #000;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 10px;
+}
+
+#messages .word a:link {
+    color: #604726;
+    font-size: 16px;
+}
+
+#messages .word a:visited {
+    color: #604726;
+}

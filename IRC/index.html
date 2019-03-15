@@ -157,16 +157,16 @@
         }
 
         window.onload = () => {
-            if (!document.cookie) {
-                document.querySelector('#messages').innerHTML = '<div class="title">SITCON 聊天室</div>'
-            } else {
-                document.querySelector('#messages').innerHTML = document.cookie
-            }
-            document.querySelector('#messages').scrollTo(0, document.querySelector('#messages').scrollHeight)
+            // if (!document.cookie) {
+            //     document.querySelector('#messages').innerHTML = '<div class="title">SITCON 聊天室</div>'
+            // } else {
+            //     document.querySelector('#messages').innerHTML = document.cookie
+            // }
+            // document.querySelector('#messages').scrollTo(0, document.querySelector('#messages').scrollHeight)
         }
 
         window.onunload = () => {
-            document.cookie = document.querySelector('#messages').innerHTML
+            // document.cookie = document.querySelector('#messages').innerHTML
         }
     </script>
 </head>

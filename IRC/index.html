@@ -3,11 +3,35 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SITCON 聊天室</title>
     <link rel="stylesheet" href="./main.css">
     <script>
+
+        function getToday() {
+            var xhr = new XMLHttpRequest()
+            xhr.open('get', 'https://cors-anywhere.herokuapp.com/https://ysitd.licson.net/channel/sitcon/today')
+            xhr.onload = function () {
+                var parser = new DOMParser()
+                var doc = parser.parseFromString(xhr.response, 'text/html')
+                var messages = doc.querySelectorAll('.message')
+                messages.forEach(message => {
+                    var word = message.querySelector('.word')
+
+                    if (word) {
+                        word.textContent = word.textContent.replace(/^<(.+)>/, '$1')
+                    }
+                    document.querySelector('#messages').appendChild(message)
+                })
+            }
+            xhr.send()
+
+        }
+        getToday();
+
+
         // WebSocket handler
         let ws = new WebSocket('ws://139.162.113.186:8080') // 晚點給
         ws.onopen = e => {

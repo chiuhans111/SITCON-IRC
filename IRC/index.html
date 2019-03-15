@@ -26,30 +26,32 @@
 </body>
 <script>
 
+
+
     function SET_LOADING() {
         document.body.classList.add('status-loading')
-        document.body.classList.remove('status-done')
-        document.body.classList.remove('status-offline')
-    }
-
-    function SET_DONE() {
-        document.body.classList.remove('status-loading')
-        document.body.classList.add('status-done')
-        document.body.classList.remove('status-offline')
     }
 
     function SET_OFFLINE() {
-        document.body.classList.remove('status-loading')
-        document.body.classList.remove('status-done')
         document.body.classList.add('status-offline')
     }
 
+    function SET_DONE() {
+        if (getToday_loaded && socket_connected) {
+            document.body.classList.remove('status-offline')
+            document.body.classList.remove('status-loading')
+            document.body.classList.add('status-done')
+        }
+    }
+
+
     var parser = new DOMParser()
     SET_LOADING();
-
+    var getToday_loaded = false;
     function getToday() {
         let xhr;
         let timeout = setTimeout(() => {
+            if (getToday_loaded) return;
             SET_OFFLINE();
             getToday();
         }, 1000 * 3);
@@ -57,8 +59,10 @@
         xhr = new XMLHttpRequest()
         xhr.open('get', 'https://cors-anywhere.herokuapp.com/https://ysitd.licson.net/channel/sitcon/today')
         xhr.onload = function () {
+            if (getToday_loaded) return;
+            getToday_loaded = true;
             SET_DONE();
-            clearTimeout(timeout)
+            clearTimeout(timeout);
             let doc = parser.parseFromString(xhr.response, 'text/html')
             let messages = doc.querySelectorAll('.message')
             document.querySelector('#messages').innerHTML = ""
@@ -70,25 +74,22 @@
                 document.querySelector('#messages').appendChild(message)
 
             })
-            document.body.scrollTo(0, document.body.scrollHeight)
+            setTimeout(() => {
+                document.body.scrollTo(0, document.body.scrollHeight)
+                setupWebSocket();
+
+            }, 100);
         }
         xhr.send()
     }
-
-
-
-    try {
-        getToday();
-    } catch (e) {
-        console.log('斷線')
-
-        console.log(e)
-    }
+    getToday();
 
     var retryCount = 0;
     var waitBeforeRetry = 0;
     // WebSocket handler
+    var socket_connected = false;
     function setupWebSocket() {
+
         if (retryCount > 10) waitBeforeRetry = 500
         if (retryCount > 20) waitBeforeRetry = 1000
         if (retryCount > 50) waitBeforeRetry = 2000
@@ -96,14 +97,42 @@
             document.body.innerHTML = ":( -- 斷線了"
             return;
         }
-        let ws;
-        try {
-            ws = new WebSocket('ws://139.162.113.186:8080') // 晚點給
-        } catch (e) {
-            console.log('斷線')
+
+        let retrying = false;
+        function offline() {
+            if (retrying) return;
+            retrying = true;
+            socket_connected = false;
+            SET_OFFLINE();
+            console.log('已斷線')
+            retryCount++;
+            ws.onopen = null;
+            ws.onclose = null;
+            ws.onerror = null;
+            ws.onmessage = null;
+            ws.close()
+            setTimeout(() => {
+                setupWebSocket()
+            }, waitBeforeRetry);
         }
+
+        let timeout = setTimeout(() => {
+            if (socket_connected) return;
+            offline();
+        }, 1000 * 5);
+
+
+        let ws = new WebSocket('ws://139.162.113.186:8080') // 晚點給
+
         window.ws = ws;
+
+
         ws.onopen = e => {
+            socket_connected = true;
+            retryCount = 0;
+            waitBeforeRetry = 0;
+            SET_DONE();
+            clearTimeout(timeout)
             console.log('Connection to server opened:' + ws.readyState)
             /* 很重要！！！！ 一定要宣告！！！！ */
             ws.send(JSON.stringify({
@@ -111,18 +140,10 @@
             }))
         }
         ws.onclose = e => {
-            console.log('已斷線')
-            retryCount++
-            setTimeout(() => {
-                setupWebSocket()
-            }, waitBeforeRetry);
+            offline();
         }
         ws.onerror = e => {
-            console.log('已斷線')
-            retryCount++
-            setTimeout(() => {
-                setupWebSocket()
-            }, waitBeforeRetry);
+            offline();
         }
         ws.onmessage = event => {
             console.log("Message recieved: " + event.data)
@@ -242,7 +263,6 @@
     window.onunload = () => {
         // document.cookie = document.querySelector('#messages').textContent
     }
-    setupWebSocket();
 
 </script>
 

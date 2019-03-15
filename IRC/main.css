@@ -50,7 +50,7 @@ body {
     top: 0;
     left: 0;
     pointer-events: none;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
     opacity: 0;
     transition: opacity .2s;
 }
@@ -82,7 +82,7 @@ body {
 
 #messages .time {
     height: 24px;
-    background-color: #FFF;
+    background-color: gray;
     color: #000;
     display: flex;
     justify-content: start;
@@ -90,8 +90,8 @@ body {
 
 #messages .time::after {
     border-top: solid 22px black;
-    border-left: solid 24px white;
-    border-bottom: solid 2px white;
+    border-left: solid 24px gray;
+    border-bottom: solid 2px gray;
     content: '';
     flex-grow: 1;
 }
@@ -101,7 +101,6 @@ body {
     text-transform: uppercase;
     color: inherit;
     font-size: 16px;
-    background-color: #FFF;
     padding: 2px 8px 2px;
     vertical-align: baseline;
 }

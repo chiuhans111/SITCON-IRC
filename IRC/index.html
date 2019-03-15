@@ -26,7 +26,7 @@
                     document.querySelector('#messages').appendChild(message)
 
                 })
-                document.querySelector('#messages').scrollTo(0, document.querySelector('#messages').scrollHeight)
+                document.body.scrollTo(0, document.body.scrollHeight)
             }
             xhr.send()
 
@@ -75,7 +75,7 @@
                     break
                 default:
             }
-            document.querySelector('#messages').scrollTo(0, document.querySelector('#messages').scrollHeight)
+            document.body.scrollTo(0, document.body.scrollHeight)
         }
 
         // 有新訊息時 call 這個

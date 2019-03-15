@@ -87,11 +87,11 @@
             let text = document.createElement('a')
             messageDIV.setAttribute('id', `M${data.message_id}`)
             messageDIV.setAttribute('class', 'message')
-            text.innerHTML = transferTime(data.date)
+            text.textContent = transferTime(data.date)
             timeDIV.setAttribute('class', 'time')
             timeDIV.appendChild(text)
             wordDIV.setAttribute('class', 'word')
-            wordDIV.innerHTML = `${data.from.username}: ${data.text}`
+            wordDIV.textContent = `${data.from.username}: ${data.text}`
             messageDIV.appendChild(timeDIV)
             messageDIV.appendChild(wordDIV)
             document.querySelector('#messages').appendChild(messageDIV)
@@ -102,7 +102,7 @@
             // do something here
             if (!document.querySelector(`#M${data.message_id} .word`)) {
                 updateDIV = querySelector(`#M${data.message_id} .word`)
-                updateDIV.innerHTML = data.text
+                updateDIV.textContent = data.text
             }
         }
 
@@ -113,11 +113,11 @@
             let text = document.createElement('a')
             messageDIV.setAttribute('id', `M${data.message_id}`)
             messageDIV.setAttribute('class', 'message')
-            text.innerHTML = transferTime(data.date)
+            text.textContent = transferTime(data.date)
             timeDIV.setAttribute('class', 'time')
             timeDIV.appendChild(text)
             wordDIV.setAttribute('class', 'word')
-            wordDIV.innerHTML = `${data.from.username}: <img>`
+            wordDIV.textContent = `${data.from.username}: <img>`
             messageDIV.appendChild(timeDIV)
             messageDIV.appendChild(wordDIV)
             document.querySelector('#messages').appendChild(messageDIV)
@@ -130,11 +130,11 @@
             let text = document.createElement('a')
             messageDIV.setAttribute('id', `M${data.message_id}`)
             messageDIV.setAttribute('class', 'message')
-            text.innerHTML = transferTime(data.date)
+            text.textContent = transferTime(data.date)
             timeDIV.setAttribute('class', 'time')
             timeDIV.appendChild(text)
             wordDIV.setAttribute('class', 'word')
-            wordDIV.innerHTML = `${data.from.username}: ${data.sticker.emoji}`
+            wordDIV.textContent = `${data.from.username}: ${data.sticker.emoji}`
             messageDIV.appendChild(timeDIV)
             messageDIV.appendChild(wordDIV)
             document.querySelector('#messages').appendChild(messageDIV)
@@ -158,15 +158,15 @@
 
         window.onload = () => {
             // if (!document.cookie) {
-            //     document.querySelector('#messages').innerHTML = '<div class="title">SITCON 聊天室</div>'
+            //     document.querySelector('#messages').textContent = '<div class="title">SITCON 聊天室</div>'
             // } else {
-            //     document.querySelector('#messages').innerHTML = document.cookie
+            //     document.querySelector('#messages').textContent = document.cookie
             // }
             // document.querySelector('#messages').scrollTo(0, document.querySelector('#messages').scrollHeight)
         }
 
         window.onunload = () => {
-            // document.cookie = document.querySelector('#messages').innerHTML
+            // document.cookie = document.querySelector('#messages').textContent
         }
     </script>
 </head>

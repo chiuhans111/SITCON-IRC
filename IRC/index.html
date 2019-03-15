@@ -24,7 +24,9 @@
                         word.textContent = word.textContent.replace(/^<(.+)>/, '$1')
                     }
                     document.querySelector('#messages').appendChild(message)
+
                 })
+                document.querySelector('#messages').scrollTo(0, document.querySelector('#messages').scrollHeight)
             }
             xhr.send()
 

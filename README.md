@@ -1,3 +1,5 @@
 SITCON-IRC
 
-made by shibasalmon
+original by shibasalmon
+
+remix by HansChiu

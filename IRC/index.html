@@ -68,7 +68,10 @@
             document.querySelector('#messages').innerHTML = ""
             messages.forEach(message => {
                 var word = message.querySelector('.word')
+                var from = message.querySelector('.from')
                 if (word) {
+                    var from_name = from.textContent.trim()
+                    if (from_name != 'SITCON-tgBot1') word.textContent = from_name + ': ' + word.textContent
                     word.textContent = word.textContent.replace(/^<(.+)>/, '$1')
                 }
                 document.querySelector('#messages').appendChild(message)

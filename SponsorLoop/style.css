@@ -1,0 +1,75 @@
+html,
+body,
+#app {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+.container {
+    margin: 0px 8px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.overlay {
+    z-index: 99;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: white;
+    opacity: 1;
+    transition: opacity 1s;
+}
+
+.done .overlay {
+    opacity: 0;
+}
+
+/* IMAGE */
+
+img {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin: 16px auto;
+    max-width: 600px;
+}
+
+/* TAG */
+
+.tag {
+    position: relative;
+    width: 100%;
+    /* margin: 100px 0px 20px; */
+    padding: 128px 0px 0px;
+    display: flex;
+}
+
+.anchor {
+    /* position: relative */
+    opacity: 0;
+}
+
+.anchor,
+.tag .text {
+    width: 100%;
+    height: 100px;
+    /* background-color: gray; */
+    z-index: 9;
+    margin-top: 8px;
+}
+
+.text {
+    position: fixed;
+}
+
+.tag-img {
+    width: 50vw;
+    max-width: 200px;
+    margin: 0;
+    position: absolute;
+    right: 0px;
+}

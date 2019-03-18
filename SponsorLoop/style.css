@@ -12,6 +12,12 @@ body,
     overflow: hidden;
 }
 
+.group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .overlay {
     z-index: 99;
     width: 100%;
@@ -28,14 +34,18 @@ body,
     opacity: 0;
 }
 
-/* IMAGE */
+/* sponser */
 
-img {
-    display: block;
-    position: relative;
+.sponser {
+    width: 33.33%;
+    min-width: 300px;
+    max-width: 400px;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.sponser img {
     width: 100%;
-    margin: 16px auto;
-    max-width: 600px;
 }
 
 /* TAG */
@@ -44,7 +54,7 @@ img {
     position: relative;
     width: 100%;
     /* margin: 100px 0px 20px; */
-    padding: 128px 0px 0px;
+    padding: 128px 0px 64px;
     display: flex;
 }
 
@@ -55,11 +65,11 @@ img {
 
 .anchor,
 .tag .text {
+    border-top: solid 2px gray;
     width: 100%;
     height: 100px;
     /* background-color: gray; */
     z-index: 9;
-    margin-top: 8px;
 }
 
 .text {
@@ -72,4 +82,9 @@ img {
     margin: 0;
     position: absolute;
     right: 0px;
+    transition: max-width .3s;
+}
+
+.fixed .tag-img {
+    max-width: 150px;
 }

@@ -125,6 +125,7 @@ function update() {
     //
 
     tags.map(tag => {
+        tag.classList.remove('fixed')
         tag.rect = tag.anchor.getBoundingClientRect()
         tag.text.style.top = tag.rect.y + 'px'
         return tag
@@ -142,6 +143,7 @@ function update() {
     }).pop()
 
     if (lastOutTag) {
+        lastOutTag.classList.add('fixed')
         lastOutTag.text.style.top = '0px'
     }
 

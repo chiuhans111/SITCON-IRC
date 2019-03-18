@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="group" v-for="x in 3">
-                <div v-for="(sponsor, i) in sponsors"
+                <template v-for="(sponsor, i) in sponsors"
                     v-if="level2name(sponsor.level)!=null">
                     <div v-if="sponsor.firstInClass"
                         class='tag'>
@@ -42,13 +42,15 @@
                             <!-- {{level2name(sponsor.level)}} -->
                         </div>
                     </div>
+                    <div class="sponser">
 
-                    <img :src="'https://sitcon.org/2019/static/img/sponsor/'+sponsor.image"
-                        alt="">
+                        <img :src="'https://sitcon.org/2019/static/img/sponsor/'+sponsor.image"
+                            alt="">
+                    </div>
 
                     <!-- <span>{{sponsor.name}}</span>
-                        <span>{{sponsor.description}}</span> -->
-                </div>
+                    <span>{{sponsor.description}}</span> -->
+                </template>
             </div>
         </div>
     </div>

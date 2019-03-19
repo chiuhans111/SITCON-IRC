@@ -85,7 +85,7 @@ var scrollTop = 0
 
 var i, j,
     tags, lastOutTag, nextOutTag,
-    images, delayshows
+    images, delayshows, rollings
 
 function setup() {
     appelement = document.querySelector('#app')
@@ -102,6 +102,16 @@ function setup() {
     // register delay show
     //
     delayshows = Array.from(document.querySelectorAll('.delay-show'))
+
+    //
+    // fill rolling text with enough text
+    //
+    Array.from(document.querySelectorAll('.rolling-group *')).map(x => {
+        x.textContent = x.textContent.repeat(Math.ceil(100 / (x.textContent.length + 1)))
+    })
+
+    rollings = Array.from(document.querySelectorAll('.rolling-container'))
+
 
     //
     // Wait for images to load
@@ -132,7 +142,7 @@ function update() {
     else pixel_per_second = max_pixel_per_second
 
     requestAnimationFrame(update)
-    console.log('update')
+    // console.log('update')
 
     //
     // 顯示延遲顯示的物件
@@ -146,6 +156,14 @@ function update() {
                 x.style.transitionDelay = rect.x / innerWidth * 0.5 + 0.1 + 's'
             x.classList.add('show')
         }
+    })
+
+    //
+    // 讓 rolling 有 parallex 效果
+    // 
+    rollings.map(x => {
+        rect = x.parentNode.getBoundingClientRect()
+        x.style.top = -rect.y / 3 + 'px'
     })
 
 

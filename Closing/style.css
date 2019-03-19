@@ -1,0 +1,105 @@
+html,
+body,
+#app {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Noto Sans', sans-serif;
+    background-color: #f4f1ea;
+}
+
+.container {
+    text-align: center;
+    max-width: 1400px;
+    margin: auto;
+}
+
+.cover {
+    width: 100%;
+}
+
+/* TYPOGRAPHY */
+
+h2 {
+    font-size: 2em;
+    color: #604726;
+}
+
+/* COMMON */
+
+.list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* STAFF */
+
+.staff {
+    padding: 40px;
+    margin: 40px;
+}
+
+.staff-member {
+    position: relative;
+    width: 12.5%;
+    padding: 20px;
+    min-width: 100px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.staff-description{
+    max-width: 768px;
+    margin: auto;
+}
+
+.staff-img {
+    width: 100%;
+    border-radius: 25%;
+    background-color: white;
+}
+
+.staff-name {
+    position: relative;
+    display: inline-block;
+    font-size: 18px;
+    left: 50%;
+    white-space: nowrap;
+    transform: translate(-50%, 0);
+    font-weight: bold;
+}
+
+/* SPONSOR */
+
+.sponsor {
+    width: 50%;
+    padding: 20px 10px;
+    box-sizing: border-box;
+}
+
+.sponsor img {
+    width: 100%;
+}
+
+.tag {
+    padding: 200px 0px 40px;
+    width: 100%;
+}
+
+.tag-img {
+    margin: auto;
+    height: 50px;
+}
+
+/* INDIVIDUAL */
+
+.individuals .list {
+    justify-content: space-between;
+    text-align: center;
+}
+
+.individual {
+    margin: 20px;
+}

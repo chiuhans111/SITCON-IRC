@@ -11,6 +11,16 @@ body,
     /* background-color: #f4f1ea; */
 }
 
+#app {
+    padding-right: 50px;
+    overflow: auto;
+}
+
+.page {
+    width: 100vw;
+    overflow: hidden
+}
+
 img {
     display: block;
     padding: 0;
@@ -23,7 +33,7 @@ img {
 }
 
 .cover {
-    width: 100%;
+    width: 100vw;
 }
 
 footer {
@@ -31,14 +41,15 @@ footer {
 }
 
 /* TYPOGRAPHY */
-h1{
+
+h1 {
     font-size: 36px;
 }
+
 h2 {
     font-size: 5em;
     color: #604726;
     font-weight: 900;
-
 }
 
 /* COMMON */
@@ -50,7 +61,7 @@ h2 {
 }
 
 section {
-    margin: 200px 0px;
+    margin: 400px 0px;
     text-align: center;
 }
 
@@ -70,8 +81,6 @@ section {
 
 /* STAFF */
 
-
-
 .staff {
     padding: 200px 0px 40px;
     margin: 40px;
@@ -79,17 +88,25 @@ section {
     /* background-color: rgba(255, 255, 255, 0.7); */
 }
 
-.staff-group-name{
-    text-shadow: 0 8px 16px rgba(255,255,255,0.3), 0 3px 6px rgba(0,0,0,0.23);   
+.staff-group-name {
+    text-shadow: 0 8px 16px rgba(255, 255, 255, 0.3), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 .staff-member {
     position: relative;
     width: 12.5%;
-    padding: 32px;
+    padding: 2%;
     min-width: 100px;
     box-sizing: border-box;
     text-align: left;
+}
+
+@media (max-width: 768px) {
+    .staff-member {
+        position: relative;
+        width: 20%;
+        padding: 10px;
+    }
 }
 
 .staff-description {
@@ -103,7 +120,7 @@ section {
     border-radius: 25%;
     background-color: white;
     overflow: hidden;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.25), 0 5px 5px rgba(0,0,0,0.22);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25), 0 5px 5px rgba(0, 0, 0, 0.22);
 }
 
 .staff .onepx {
@@ -118,9 +135,7 @@ section {
     margin: auto;
     left: 50%;
     transform: translate(-50%, 0);
-    text-shadow: 0 8px 16px rgba(255,255,255,0.3), 0 3px 6px rgba(0,0,0,0.23);   
-
-    
+    text-shadow: 0 8px 16px rgba(255, 255, 255, 0.3), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 .staff-name {
@@ -132,6 +147,12 @@ section {
     white-space: nowrap;
     transform: translate(-50%, 0);
     font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    .staff-name {
+        font-size: 18px;
+    }
 }
 
 /* SPONSOR */
@@ -166,21 +187,18 @@ section {
 /* INDIVIDUAL */
 
 .individuals .list {
-
     justify-content: space-between;
     text-align: center;
     max-width: 1080px;
     margin: 100px auto;
-    
 }
 
 .individual {
     font-size: 24px;
     /* font-weight: bold; */
     margin: 20px;
-    text-shadow: 0 8px 16px rgba(255,255,255,0.3);
-    font-weight: 400;   
-
+    text-shadow: 0 8px 16px rgba(255, 255, 255, 0.3);
+    font-weight: 400;
 }
 
 /* ROLLING */

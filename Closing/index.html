@@ -13,9 +13,11 @@
 
 <body>
     <div id="app">
-        <img src="./Standby_white.png" class="cover" alt="">
-        <section class="staffs">
-            <!-- <div class="rolling">
+        <div class="page">
+
+            <img src="./Standby_white.png" class="cover" alt="">
+            <section class="staffs">
+                <!-- <div class="rolling">
                 <div class="rolling-container">
                     <div class="rolling-group">
                         <h1>工作工作工作工作工作耕作工作工作工作工作</h1>
@@ -27,120 +29,118 @@
                     </div>
                 </div>
             </div> -->
-            <h1>工作人員</h1>
-            <div class="staff" v-for="group in staff">
+                <h1>工作人員</h1>
+                <div class="staff" v-for="group in staff">
 
-                <!-- <div class="container">
+                    <!-- <div class="container">
                     <h4 class="staff-description delay-show ">
                         {{group.description}}
                     </h4>
                 </div> -->
+                    <h2 class="staff-group-name delay-show">
+                        {{group.name}}
+                    </h2>
 
-                <h2 class="staff-group-name delay-show">
-                    {{group.name}}
-                </h2>
-                <div class="rolling ">
-                    <div class="rolling-container delay-show">
-                        <div class="rolling-group">
-                            <h1 v-for="i in 2"> {{group.description}}</h1>
-                        </div>
-                        <div class="rolling-group">
-                            <h2 v-for="i in 2"> {{group.description}}</h2>
+                    <div class="rolling ">
+                        <div class="rolling-container delay-show">
+                            <div class="rolling-group">
+                                <h1 v-for="i in 2"> {{group.description}}</h1>
+                            </div>
+                            <div class="rolling-group">
+                                <h2 v-for="i in 2"> {{group.description}}</h2>
+                            </div>
                         </div>
                     </div>
+                    <div class="container">
+                        <div class="list">
+                            <div class="staff-member delay-show delay-sequence" v-for="member in group.members">
+                                <div class="staff-img-container">
+                                    <img class="staff-img"
+                                        :src="'https://www.gravatar.com/avatar/'+member.emailHash+'?d=https://sitcon.org/2019/static/img/default_avatar.png'"
+                                        alt="">
+                                    <img class="onepx" src="./onepx.png" alt="">
+                                </div>
+
+                                <div class="staff-name">
+                                    {{member.name}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+            </section>
+            <section class="sponsors">
+                <!-- <h1>贊助廠商</h1> -->
                 <div class="container">
+
                     <div class="list">
-                        <div class="staff-member delay-show delay-sequence" v-for="member in group.members">
-                            <div class="staff-img-container">
-                                <img class="staff-img"
-                                    :src="'https://www.gravatar.com/avatar/'+member.emailHash+'?d=https://sitcon.org/2019/static/img/default_avatar.png'"
-                                    alt="">
-                                <img class="onepx" src="./onepx.png" alt="">
-                            </div>
+                        <template v-for="sponsor in sponsors">
+                            <div v-if="sponsor.firstInClass" class='tag'>
 
-                            <div class="staff-name">
-                                {{member.name}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-        <hr>
-        <section class="sponsors">
-            <!-- <h1>贊助廠商</h1> -->
-            <div class="container">
-
-                <div class="list">
-                    <template v-for="sponsor in sponsors">
-                        <div v-if="sponsor.firstInClass" class='tag'>
-
-                            <div class="text" :id="sponsor.level">
-                                <!-- <img class="tag-img" :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
+                                <div class="text" :id="sponsor.level">
+                                    <!-- <img class="tag-img" :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
                         alt="">
                     </div> -->
+                                </div>
+                                <h2 class="delay-show">
+                                    {{level2name(sponsor.level)}}
+                                </h2>
                             </div>
-                            <h2 class="delay-show">
-                                {{level2name(sponsor.level)}}
-                            </h2>
-                        </div>
-                        <div :class="{
+                            <div :class="{
                             'sponsor': true,
                             'delay-show': true,
                             'three': sponsor.level == 'thank'
                         }">
-                            <img class="sponsor-img" :src="'https://sitcon.org/2019/static/img/sponsor/'+sponsor.image"
-                                alt="">
-                            <div class="sponsor-name">
-                                {{sponsor.name}}
+                                <img class="sponsor-img"
+                                    :src="'https://sitcon.org/2019/static/img/sponsor/'+sponsor.image" alt="">
+                                <div class="sponsor-name">
+                                    {{sponsor.name}}
+                                </div>
                             </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </section>
-        <hr>
-        <section class="individuals">
-            <h2>個人贊助</h2>
-            <div class="rolling">
-                <div class="rolling-container">
-                    <div class="rolling-group">
-                        <h2 v-for="i in 2">感恩乾爹讚嘆乾爹</h2>
-                    </div>
-                    <div class="rolling-group">
-                        <h1 v-for="i in 2">SITCON 感恩你 </h1>
-                    </div>
-                    <div class="rolling-group">
-                        <h2 v-for="i in 2">請多多成為乾爹</h2>
-                    </div>
-                    <div class="rolling-group">
-                        <h1 v-for="i in 2">SITCON 愛你們 </h1>
+                        </template>
                     </div>
                 </div>
-            </div>
-            <div class="container">
-                <div class="list">
-                    <template class="" v-for="(name,i) in individual">
-                        <div v-if="i>0" class="individual delay-show delay-sequence">
-                            /
+            </section>
+            <section class="individuals">
+                <h2>個人贊助</h2>
+                <div class="rolling">
+                    <div class="rolling-container">
+                        <div class="rolling-group">
+                            <h2 v-for="i in 2">感恩乾爹讚嘆乾爹</h2>
                         </div>
-                        <div class="individual delay-show delay-sequence">
-                            {{name}}
+                        <div class="rolling-group">
+                            <h1 v-for="i in 2">SITCON 感恩你 </h1>
+                        </div>
+                        <div class="rolling-group">
+                            <h1 v-for="i in 2">SITCON 愛你們 </h1>
+                        </div>
+                        <div class="rolling-group">
+                            <h2 v-for="i in 2">請多多成為乾爹</h2>
                         </div>
 
-                    </template>
+                    </div>
                 </div>
-            </div>
-        </section>
-        <hr>
-        <section class="delay-show">
-            <h2>謝謝各位的參加</h2>
-            <h2>我們明年再見！</h2>
-        </section>
-        <img src="./Standby_black.png" class="cover" alt="">
+                <div class="container">
+                    <div class="list">
+                        <template class="" v-for="(name,i) in individual">
+                            <div v-if="i>0" class="individual delay-show delay-sequence">
+                                /
+                            </div>
+                            <div class="individual delay-show delay-sequence">
+                                {{name}}
+                            </div>
 
+                        </template>
+                    </div>
+                </div>
+            </section>
+            <section class="delay-show">
+                <h2>謝謝各位的參加</h2>
+                <h2>我們明年再見！</h2>
+            </section>
+            <img src="./Standby_black.png" class="cover" alt="">
+        </div>
     </div>
 </body>
 <script src="./main.js"></script>

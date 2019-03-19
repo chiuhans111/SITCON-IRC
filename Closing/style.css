@@ -6,7 +6,8 @@ body,
     width: 100%;
     height: 100%;
     font-family: 'Noto Sans', sans-serif;
-    background-color: #f4f1ea;
+    /* overflow: hidden; */
+    /* background-color: #f4f1ea; */
 }
 
 .container {
@@ -17,6 +18,10 @@ body,
 
 .cover {
     width: 100%;
+}
+
+footer {
+    height: 600px;
 }
 
 /* TYPOGRAPHY */
@@ -32,6 +37,23 @@ h2 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+section {
+    margin: 200px 0px;
+}
+
+/* ANIMATION */
+
+.delay-show {
+    opacity: 0;
+    transform: scale(1.5);
+    transition: all 1s;
+}
+
+.delay-show.show {
+    transform: scale(1);
+    opacity: 1;
 }
 
 /* STAFF */
@@ -50,18 +72,31 @@ h2 {
     text-align: left;
 }
 
-.staff-description{
+.staff-description {
     max-width: 768px;
-    margin: auto;
+    margin: 0px auto 40px;
+}
+
+.staff-img-container {
+    width: 100%;
+    position: relative;
+}
+
+.staff .onepx {
+    width: 100%;
 }
 
 .staff-img {
-    width: 100%;
+    position: absolute;
+    top: 0;
+    height: 100%;
+    margin: auto;
     border-radius: 25%;
     background-color: white;
 }
 
 .staff-name {
+    margin-top: 10px;
     position: relative;
     display: inline-block;
     font-size: 18px;
@@ -77,10 +112,16 @@ h2 {
     width: 50%;
     padding: 20px 10px;
     box-sizing: border-box;
+    margin-bottom: 40px;
+}
+
+.sponsor.three {
+    width: 33%;
 }
 
 .sponsor img {
     width: 100%;
+    max-width: 400px;
 }
 
 .tag {
@@ -98,8 +139,11 @@ h2 {
 .individuals .list {
     justify-content: space-between;
     text-align: center;
+    max-width: 1080px;
+    margin: auto;
 }
 
 .individual {
-    margin: 20px;
+    font-weight: bold;
+    margin: 20px 40px;
 }

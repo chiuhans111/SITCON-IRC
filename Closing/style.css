@@ -11,7 +11,7 @@ body,
     /* background-color: #f4f1ea; */
 }
 
-img{
+img {
     display: block;
     padding: 0;
     margin: auto;
@@ -98,6 +98,8 @@ section {
     top: 0;
     height: 100%;
     margin: auto;
+    left: 50%;
+    transform: translate(-50%, 0);
     border-radius: 25%;
     background-color: white;
 }

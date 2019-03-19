@@ -19,16 +19,21 @@
                 <h1>工作人員</h1>
                 <div class="staff" v-for="group in staff">
                     <div class="container">
-                        <h2>
+                        <h2 class="delay-show">
                             {{group.name}}
                         </h2>
-                        <h4 class="staff-description">
+                        <h4 class="staff-description delay-show ">
                             {{group.description}}
                         </h4>
                         <div class="list">
-                            <div class="staff-member" v-for="member in group.members">
-                                <img class="staff-img" :src="'https://www.gravatar.com/avatar/'+member.emailHash"
-                                    alt="">
+                            <div class="staff-member delay-show delay-sequence" v-for="member in group.members">
+                                <div class="staff-img-container">
+                                    <img class="staff-img"
+                                        :src="'https://www.gravatar.com/avatar/'+member.emailHash+'?d=https://sitcon.org/2019/static/img/default_avatar.png'"
+                                        alt="">
+                                    <img class="onepx" src="./onepx.png" alt="">
+                                </div>
+
                                 <div class="staff-name">
                                     {{member.name}}
                                 </div>
@@ -39,21 +44,28 @@
             </section>
             <hr>
             <section class="sponsors">
-                <h1>贊助廠商</h1>
+                <!-- <h1>贊助廠商</h1> -->
 
                 <div class="list">
                     <template v-for="sponsor in sponsors">
                         <div v-if="sponsor.firstInClass" class='tag'>
-                            
+
                             <div class="text" :id="sponsor.level">
-                                <img class="tag-img" :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
+                                <!-- <img class="tag-img" :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
                                     alt="">
-                                <!-- {{level2name(sponsor.level)}} -->
+                                </div> -->
                             </div>
+                            <h2 class="delay-show">
+                                {{level2name(sponsor.level)}}
+                            </h2>
                         </div>
-                        <div class="sponsor">
+                        <div :class="{
+                            'sponsor': true,
+                            'delay-show': true,
+                            'three': sponsor.level == 'thank'
+                        }">
                             <img class="sponsor-img" :src="'https://sitcon.org/2019/static/img/sponsor/'+sponsor.image"
-                            alt="">
+                                alt="">
                             <div class="sponsor-name">
                                 {{sponsor.name}}
                             </div>
@@ -65,10 +77,15 @@
             <section class="individuals">
                 <h1>個人贊助</h1>
                 <div class="list">
-                    <div class="individual" v-for="name in individual">
+                    <div class="individual delay-show delay-sequence" v-for="name in individual">
                         {{name}}
                     </div>
                 </div>
+            </section>
+            <hr>
+            <section class="delay-show">
+                <h2>謝謝各位的參加</h2>
+                <h2>我們明年再見！</h2>
             </section>
         </div>
         <img src="./Standby_black.png" class="cover" alt="">

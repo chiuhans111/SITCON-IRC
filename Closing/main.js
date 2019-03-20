@@ -3,6 +3,37 @@ var frameCount = 0
 var frameRate = 24
 var timeScale = 1
 
+
+var EasingFunctions = {
+    // no easing, no acceleration
+    linear: function (t) { return t },
+    // accelerating from zero velocity
+    easeInQuad: function (t) { return t * t },
+    // decelerating to zero velocity
+    easeOutQuad: function (t) { return t * (2 - t) },
+    // acceleration until halfway, then deceleration
+    easeInOutQuad: function (t) { return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t },
+    // accelerating from zero velocity 
+    easeInCubic: function (t) { return t * t * t },
+    // decelerating to zero velocity 
+    easeOutCubic: function (t) { return (--t) * t * t + 1 },
+    // acceleration until halfway, then deceleration 
+    easeInOutCubic: function (t) { return t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1 },
+    // accelerating from zero velocity 
+    easeInQuart: function (t) { return t * t * t * t },
+    // decelerating to zero velocity 
+    easeOutQuart: function (t) { return 1 - (--t) * t * t * t },
+    // acceleration until halfway, then deceleration
+    easeInOutQuart: function (t) { return t < .5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t },
+    // accelerating from zero velocity
+    easeInQuint: function (t) { return t * t * t * t * t },
+    // decelerating to zero velocity
+    easeOutQuint: function (t) { return 1 + (--t) * t * t * t * t },
+    // acceleration until halfway, then deceleration 
+    easeInOutQuint: function (t) { return t < .5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t }
+}
+
+
 try {
     electron = require('electron')
     webcontent = electron.remote.getCurrentWebContents()
@@ -95,6 +126,7 @@ Promise.all([
 })
 
 var max_pixel_per_second = 4;
+if (electron == null) max_pixel_per_second = 0;
 var pixel_per_second = 0;
 var container = document.querySelector('.container')
 var past = null
@@ -171,6 +203,7 @@ function loaded() {
         x.x = x.getBoundingClientRect().x
         x.y = x.getBoundingClientRect().y + appelement.scrollTop
         x.h = x.getBoundingClientRect().height
+        x.delaysequence = x.classList.contains('delay-sequence')
     })
 
     // rollings anchor
@@ -203,12 +236,25 @@ function delayShowing(x) {
         height: x.h
     }
 
-    if (rect.y < innerHeight - rect.height / 2) {
-        if (x.classList.contains('delay-sequence')) {
-            x.style.transitionDelay = (rect.x / innerWidth * 0.5 + 0.1) * timeScale + 's'
-        }
-        x.classList.add('show')
+    let offset = 0;
+    if (x.delaysequence) {
+        offset = rect.x / innerWidth
     }
+    if (rect.height < innerHeight / 6) rect.height = innerHeight / 6
+    let max = innerHeight - rect.height * offset // less than this, start to showup
+    let min = innerHeight - rect.height - rect.height * offset // less than this, fully shown
+    let f = Math.max(0, Math.min(1, (rect.y - min) / (max - min)))
+    f = EasingFunctions.easeInOutCubic(f)
+
+    x.style.transform = `scale(${f + 1})`
+    x.style.opacity = 1 - f
+
+    // if (rect.y < innerHeight - rect.height / 2) {
+    //     if (x.classList.contains('delay-sequence')) {
+    //         x.style.transitionDelay = (rect.x / innerWidth * 0.5 + 0.1) * timeScale + 's'
+    //     }
+    //     x.classList.add('show')
+    // }
 }
 
 var filterDelayShows = function (x) {
@@ -221,7 +267,25 @@ function parallexEffect(x) {
     rect = {
         y: x.y - scrollTop
     }
-    x.style.transform = `translate(0, ${-rect.y / 3}px )`
+    x.style.transform = `translate(0, ${(innerHeight / 3 - rect.y) / 3}px )`
+}
+
+function rollingEffect(x) {
+    rect = {
+        y: x.y - scrollTop
+    }
+
+
+    var containers = Array.from(x.querySelectorAll('.rolling-group'))
+    var f = rect.y / 30000 % 1
+    containers.map((y, i) => {
+        var offset = f * 50
+        if (i % 2 == 0) offset = 50 - offset
+        y.style.transform = `translate(${-offset}%,0)`
+
+    })
+
+
 }
 
 
@@ -250,14 +314,15 @@ function update() {
     //
     // 顯示延遲顯示的物件
     //
-    delayshows = delayshows.filter(filterDelayShows)
+    // delayshows = delayshows.filter(filterDelayShows)
 
     delayshows.map(delayShowing)
 
     //
-    // 讓 rolling 有 parallex 效果
+    // ROLLINGS
     // 
     rollings.map(parallexEffect)
+    rollings.map(rollingEffect)
 
 
     //

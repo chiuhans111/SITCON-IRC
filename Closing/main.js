@@ -2,7 +2,9 @@ var electron, webcontent, fs
 var frameCount = 0
 var frameRate = 24
 var timeScale = 1
+var height, width
 
+var frmaeCounter = document.querySelector('.framecount')
 
 var EasingFunctions = {
     // no easing, no acceleration
@@ -38,7 +40,7 @@ try {
     electron = require('electron')
     webcontent = electron.remote.getCurrentWebContents()
     fs = require('fs')
-    electron.remote.getCurrentWindow().setContentSize(1920 / 2, 1080 / 2)
+    electron.remote.getCurrentWindow().setContentSize(1920, 1080)
 } catch (e) {
     console.log('you are not using electron')
     timeScale = 1
@@ -125,15 +127,16 @@ Promise.all([
     }, 0)
 })
 
-var max_pixel_per_second = 2;
-if (electron == null) max_pixel_per_second = 0;
+var max_pixel_per_second = 3;
+// if (electron == null) max_pixel_per_second = 0;
+
 var pixel_per_second = 0;
 var container = document.querySelector('.container')
 var past = null
 var scrollTop = 0
 
 
-var i, j,
+var i, j, f,
     tags, lastOutTag, nextOutTag,
     images, delayshows, rollings
 
@@ -209,6 +212,7 @@ function loaded() {
     // rollings anchor
     rollings.map(x => {
         x.y = x.getBoundingClientRect().y + appelement.scrollTop
+        x.groups = Array.from(x.querySelectorAll('.rolling-group'))
     })
 
 
@@ -234,60 +238,66 @@ var now, past
 // DELAY SHOW
 function delayShowing(x) {
     //rect = x.getBoundingClientRect()
-    let rect = {
-        x: x.x,
-        y: x.y - scrollTop,
-        height: x.h
-    }
+    h = x.h
+    y = x.y - scrollTop
+
+    if (y > height * 2) return;
+
 
     let offset = 0;
-    if (x.delaysequence) {
-        offset = rect.x / innerWidth
-    }
-    if (rect.height < innerHeight / 6) rect.height = innerHeight / 6
-    let max = innerHeight - rect.height * offset // less than this, start to showup
-    let min = innerHeight - rect.height - rect.height * offset // less than this, fully shown
-    let f = Math.max(0, Math.min(1, (rect.y - min) / (max - min)))
+
+    if (x.delaysequence) offset = x.x / width
+
+    if (h < height / 6) h = height / 6
+    let max = height - h * .3 - h * offset // less than this, start to showup
+    let min = height - h * .8 - h * offset // less than this, fully shown
+    f = Math.max(0, Math.min(1, (y - min) / (max - min)))
     f = EasingFunctions.easeInOutCubic(f)
 
-    x.style.transform = `scale(${f + 1})`
+    if (f != 1)
+        x.style.transform = `scale(${f + 1}) translate(0, ${f * -50}px)`
     x.style.opacity = 1 - f
 
-    // if (rect.y < innerHeight - rect.height / 2) {
+    // if (rect.y < height - rect.height / 2) {
     //     if (x.classList.contains('delay-sequence')) {
-    //         x.style.transitionDelay = (rect.x / innerWidth * 0.5 + 0.1) * timeScale + 's'
+    //         x.style.transitionDelay = (rect.x / width * 0.5 + 0.1) * timeScale + 's'
     //     }
     //     x.classList.add('show')
     // }
+    if (f == 0) x.show = true
 }
 
 var filterDelayShows = function (x) {
-    return !x.classList.contains('show')
+    return !x.show === true
 }
 
 // ROLLING
 function parallexEffect(x) {
     //rect = x.parentNode.getBoundingClientRect()
-    rect = {
-        y: x.y - scrollTop
-    }
-    x.style.transform = `translate(0, ${(innerHeight / 3 - rect.y) / 3}px )`
+    y = x.y - scrollTop
+
+    if (y > height * 2) return
+    if (y < -height) return
+    x.style.transform = `translate(0, ${(height / 3 - y) / 3}px )`
+}
+
+function updateRollingEffect(z, i, f) {
+    if (i % 2 == 0) z.style.transform = `translate(${f * 50 - 50}%,0)`
+    else z.style.transform = `translate(${- f * 50}%,0)`
 }
 
 function rollingEffect(x) {
-    rect = {
-        y: x.y - scrollTop
-    }
+    y = x.y - scrollTop
 
+    if (y > height * 2) return
+    if (y < -height) return
 
-    var containers = Array.from(x.querySelectorAll('.rolling-group'))
-    var f = rect.y / 30000 % 1
+    f = y / 10000 % 1
     while (f < 0) f += 1;
-    containers.map((y, i) => {
-        var offset = f * 50
-        if (i % 2 == 0) offset = 50 - offset
-        y.style.transform = `translate(${-offset}%,0)`
 
+
+    x.groups.map((z, i) => {
+        updateRollingEffect(z, i, f)
     })
 
 
@@ -303,6 +313,8 @@ function update() {
     // console.log('update')
     // now = performance.now()
 
+    width = innerWidth
+    height = innerHeight
 
     if (pixel_per_second < max_pixel_per_second) pixel_per_second++
     else pixel_per_second = max_pixel_per_second
@@ -310,7 +322,10 @@ function update() {
     appelement.scrollTop += max_pixel_per_second
     scrollTop = appelement.scrollTop
 
-    if (scrollTop*10 >= appelement.scrollHeight - innerHeight) {
+    //
+    // END THE VIDEO RENDERING HERE
+    //
+    if (scrollTop >= appelement.scrollHeight - height) {
         if (electron != null) {
             electron.ipcRenderer.send('end')
             return;
@@ -323,7 +338,7 @@ function update() {
     //
     // 顯示延遲顯示的物件
     //
-    // delayshows = delayshows.filter(filterDelayShows)
+    delayshows = delayshows.filter(filterDelayShows)
 
     delayshows.map(delayShowing)
 
@@ -386,12 +401,16 @@ function update() {
 
     // }
 
+    frameCount++;
+    frmaeCounter.textContent = frameCount;
+
     if (electron != null) {
-        requestAnimationFrame(function(){
-            setTimeout(() => {
-                electron.ipcRenderer.send('e_render')
-            }, 0);
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                electron.ipcRenderer.send('e_render', frameCount)
+            })
         })
+
     } else requestAnimationFrame(update)
 }
 

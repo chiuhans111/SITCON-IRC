@@ -7,22 +7,22 @@ electron.app.on('ready', () => {
     let win = new electron.BrowserWindow({
         webPreferences: {
             nodeIntegration: true,
-            // offscreen: true
+            offscreen: true
         },
 
         enableLargerThanScreen: true
     })
     win.webContents.openDevTools()
-    win.webContents.setFrameRate(24)
+    win.webContents.setFrameRate(24/3)
 
 
-    win.webContents.debugger.on('message', (e, m, p) => {
-        console.log(e, m, p)
-    })
+    // win.webContents.debugger.on('message', (e, m, p) => {
+    //     console.log(e, m, p)
+    // })
 
-    win.webContents.debugger.on('detach', (event, reason) => {
-        console.log('Debugger detached due to : ', reason)
-    })
+    // win.webContents.debugger.on('detach', (event, reason) => {
+    //     console.log('Debugger detached due to : ', reason)
+    // })
 
     electron.ipcMain.on('ready', function () {
         ready = true
@@ -30,7 +30,7 @@ electron.app.on('ready', () => {
     win.webContents.on('paint', (e, d, img) => {
         if (ready) {
             console.log(frameCount)
-            // fs.writeFileSync('./render/' + frameCount.toString().padStart(5, '0') + '.jpg', img.toJPEG(80))
+            fs.writeFileSync('./render/' + frameCount.toString().padStart(5, '0') + '.jpg', img.toJPEG(80))
             frameCount++
         } else {
             console.log('wait for ready')
@@ -38,5 +38,5 @@ electron.app.on('ready', () => {
     })
 
     win.loadFile(__dirname + './index.html')
-    win.webContents.debugger.attach()
+    // win.webContents.debugger.attach()
 })

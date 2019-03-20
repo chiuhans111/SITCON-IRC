@@ -72,15 +72,16 @@ section {
 /* ANIMATION */
 
 .delay-show {
-    opacity: 0.01;
-    transform: scale(1.5);
+    will-change: opacity, transform;
+    /* opacity: 0.01; */
+    /* transform: scale(1.5);
     transition-property: opacity, transform;
-    transition-duration: 1s;
+    transition-duration: 1s; */
 }
 
 .delay-show.show {
-    transform: scale(1);
-    opacity: 1;
+    /* transform: scale(1);
+    opacity: 1; */
 }
 
 /* STAFF */
@@ -243,11 +244,11 @@ section {
 }
 
 .rolling-group:nth-child(2n) {
-    animation: rolling-left 100s linear infinite;
+    /* animation: rolling-left 100s linear infinite; */
 }
 
 .rolling-group:nth-child(2n+1) {
-    animation: rolling-left 100s linear infinite reverse;
+    /* animation: rolling-left 100s linear infinite reverse; */
 }
 
 .rolling-container h1 {

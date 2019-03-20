@@ -64,13 +64,7 @@ var i, j,
 
 function setup() {
     groups = document.querySelectorAll('.group')
-    tags = Array.from(document.querySelectorAll('.tag')).map(tag => {
-        tag.anchor = tag.querySelector('.anchor')
-        tag.text = tag.querySelector('.text')
-        tag.rect = tag.anchor.getBoundingClientRect()
-        tag.text.style.top = tag.rect.y + 'px'
-        return tag
-    })
+
 
     images = Array.from(document.querySelectorAll('img'))
     images.map(img => {
@@ -78,11 +72,54 @@ function setup() {
             img.done = true
 
             if (images.every(x => x.done)) {
-                update()
-                container.classList.add('done')
+                setTimeout(() => {
+                    loaded()
+                }, 0);
             }
         })
     })
+}
+
+
+function loaded() {
+    tags = Array.from(document.querySelectorAll('.tag')).map(tag => {
+        tag.anchor = tag.querySelector('.anchor')
+        tag.text = tag.querySelector('.text')
+        // tag.text.style.top = tag.rect.y + 'px'
+        return tag
+    })
+    reAnchor()
+    update()
+    container.classList.add('done')
+}
+
+function reAnchor() {
+    origin = groups[0].getBoundingClientRect().y
+    start = groups[1].getBoundingClientRect().y - origin
+    end = groups[2].getBoundingClientRect().y - origin
+
+    tags.map(tag => {
+        tag.rect = tag.anchor.getBoundingClientRect()
+        tag.rect.y += container.scrollTop
+    })
+}
+
+window.addEventListener('resize', reAnchor)
+
+
+//
+// prepare function
+
+function tag_follow_anchor(tag) {
+    tag.classList.remove('fixed')
+    tag.y = tag.rect.y - scrollTop
+    tag.text.style.transform = `translate(0, ${tag.y}px)`
+    return tag
+}
+
+function tag_find_last_tag(tag) {
+    if (tag.y < 0) lastOutTag = tag
+    else if (nextOutTag == null) nextOutTag = tag
 }
 
 function update() {
@@ -104,9 +141,7 @@ function update() {
         // Loop Back
         //
 
-        origin = groups[0].getBoundingClientRect().y
-        start = groups[1].getBoundingClientRect().y - origin
-        end = groups[2].getBoundingClientRect().y - origin
+
         if (scrollTop < start) {
             scrollTop = end - scrollTop + start
         }
@@ -116,6 +151,7 @@ function update() {
         //
         // Apply movement
         //
+        
         container.scrollTop = Math.round(scrollTop)
     }
     past = now
@@ -124,12 +160,7 @@ function update() {
     // 讓標籤會卡在最上面
     //
 
-    tags.map(tag => {
-        tag.classList.remove('fixed')
-        tag.rect = tag.anchor.getBoundingClientRect()
-        tag.text.style.top = tag.rect.y + 'px'
-        return tag
-    })
+    tags.map(tag_follow_anchor)
 
     // tags.sort((a, b) => a.rect.y - b.rect.y)
 
@@ -137,21 +168,19 @@ function update() {
     nextOutTag = null
 
 
-    tags.map(tag => {
-        if (tag.rect.y < 0) lastOutTag = tag
-        else if (nextOutTag == null) nextOutTag = tag
-    }).pop()
+    tags.map(tag_find_last_tag)
 
     if (lastOutTag) {
         lastOutTag.classList.add('fixed')
-        lastOutTag.text.style.top = '0px'
+        lastOutTag.text.style.transform = `translate(0,0)`
     }
 
 
     if (nextOutTag && lastOutTag) {
-        lastOutTag.text.style.top = Math.min(
-            0, nextOutTag.rect.y - nextOutTag.rect.height
-        ) + 'px'
-    }
+        lastOutTag.text.style.transform = `translate(0, ${
+            Math.min(
+                0, nextOutTag.y - nextOutTag.rect.height
+            )}px`
 
+    }
 }

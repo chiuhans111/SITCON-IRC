@@ -105,6 +105,7 @@ var i, j,
     tags, lastOutTag, nextOutTag,
     images, delayshows, rollings
 
+
 function setup() {
     appelement = document.querySelector('#app')
 
@@ -116,6 +117,9 @@ function setup() {
     //     tag.text.style.top = tag.rect.y + 'px'
     //     return tag
     // })
+
+
+
     //
     // register delay show
     //
@@ -125,10 +129,11 @@ function setup() {
     // fill rolling text with enough text
     //
     Array.from(document.querySelectorAll('.rolling-group *')).map(x => {
-        x.textContent = x.textContent.repeat(Math.ceil(100 / (x.textContent.length + 1)))
+        x.textContent = x.textContent.repeat(Math.ceil(200 / (x.textContent.length + 1)))
     })
 
     rollings = Array.from(document.querySelectorAll('.rolling-container'))
+
 
     if (electron != null)
         Array.from(document.querySelectorAll('*')).map(element => {
@@ -147,10 +152,9 @@ function setup() {
             obj.done = true
             // console.log('loaded', img.src, images.filter(x => !x.done))
             if (images.every(x => x.done)) {
-                appelement.scrollTop = 0
-                if (electron != null) electron.ipcRenderer.send('ready')
-                update()
-                container.classList.add('done')
+                setTimeout(() => {
+                    loaded()
+                }, 0);
             }
         })
         return obj;
@@ -158,17 +162,82 @@ function setup() {
 
 }
 
+
+function loaded() {
+    appelement.scrollTop = 0
+
+    // delay show anchor
+    delayshows.map(x => {
+        x.x = x.getBoundingClientRect().x
+        x.y = x.getBoundingClientRect().y + appelement.scrollTop
+        x.h = x.getBoundingClientRect().height
+    })
+
+    // rollings anchor
+    rollings.map(x => {
+        x.y = x.getBoundingClientRect().y + appelement.scrollTop
+    })
+
+
+    // basic setup and start
+    container.classList.add('done')
+    if (electron != null) electron.ipcRenderer.send('ready')
+
+    setTimeout(() => {
+        update()
+    }, 0);
+}
+
 var now, past
+
+//
+// PREPARE FUNCTION
+//
+
+// DELAY SHOW
+function delayShowing(x) {
+    //rect = x.getBoundingClientRect()
+    let rect = {
+        x: x.x,
+        y: x.y - scrollTop,
+        height: x.h
+    }
+
+    if (rect.y < innerHeight - rect.height / 2) {
+        if (x.classList.contains('delay-sequence')) {
+            x.style.transitionDelay = (rect.x / innerWidth * 0.5 + 0.1) * timeScale + 's'
+        }
+        x.classList.add('show')
+    }
+}
+
+// ROLLING
+function parallexEffect(x) {
+    //rect = x.parentNode.getBoundingClientRect()
+    rect = {
+        y: x.y - scrollTop
+    }
+    x.style.transform = `translate(0, ${-rect.y / 3}px )`
+}
+
+
+//
+// UPDATE
+//
+
 
 function update() {
 
-    now = performance.now()
+    // now = performance.now()
 
 
     if (pixel_per_second < max_pixel_per_second) pixel_per_second++
     else pixel_per_second = max_pixel_per_second
 
-    if (appelement.scrollTop >= appelement.scrollHeight - innerHeight) {
+    appelement.scrollTop += max_pixel_per_second
+    scrollTop = appelement.scrollTop
+
+    if (scrollTop >= appelement.scrollHeight - innerHeight) {
         if (electron != null) window.close()
     }
     requestAnimationFrame(update)
@@ -179,23 +248,12 @@ function update() {
     //
     delayshows = delayshows.filter(x => !x.classList.contains('show'))
 
-    delayshows.map(x => {
-        rect = x.getBoundingClientRect()
-        if (rect.y < innerHeight - rect.height / 2) {
-            if (x.classList.contains('delay-sequence')) {
-                x.style.transitionDelay = (rect.x / innerWidth * 0.5 + 0.1) * timeScale + 's'
-            }
-            x.classList.add('show')
-        }
-    })
+    delayshows.map(delayShowing)
 
     //
     // 讓 rolling 有 parallex 效果
     // 
-    rollings.map(x => {
-        rect = x.parentNode.getBoundingClientRect()
-        x.style.top = -rect.y / 3 + 'px'
-    })
+    rollings.map(parallexEffect)
 
 
     //
@@ -247,7 +305,7 @@ function update() {
     //         frameCount++
     //     }
     // } else {
-    appelement.scrollTop += max_pixel_per_second
+
     // }
 }
 

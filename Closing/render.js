@@ -13,7 +13,7 @@ electron.app.on('ready', () => {
         enableLargerThanScreen: true
     })
     win.webContents.openDevTools()
-    // win.webContents.setFrameRate(24/3)
+    // win.webContents.setFrameRate(12)
 
 
     // win.webContents.debugger.on('message', (e, m, p) => {
@@ -25,13 +25,24 @@ electron.app.on('ready', () => {
     // })
 
     electron.ipcMain.on('ready', function () {
+        console.log(':ready to render')
+        ready = true
+        win.webContents.send('render')
+    })
+
+    electron.ipcMain.on('e_render', function () {
+        // console.log(':ready to render next')
         ready = true
     })
+
     win.webContents.on('paint', (e, d, img) => {
         if (ready) {
+            ready = false
             console.log(frameCount)
             fs.writeFileSync('./render/' + frameCount.toString().padStart(5, '0') + '.jpg', img.toJPEG(80))
             frameCount++
+            win.webContents.send('render')
+            // console.log('begin next frame')
         } else {
             console.log('wait for ready')
         }

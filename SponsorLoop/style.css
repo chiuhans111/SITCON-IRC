@@ -74,17 +74,18 @@ body,
 
 .text {
     position: fixed;
+    top: 0;
 }
 
 .tag-img {
     width: 50vw;
-    max-width: 200px;
+    max-width: 180px;
     margin: 0;
     position: absolute;
     right: 0px;
-    transition: max-width .3s;
+    /* transition: max-width .3s; */
 }
 
 .fixed .tag-img {
-    max-width: 150px;
+    /* max-width: 150px; */
 }

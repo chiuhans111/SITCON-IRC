@@ -1,3 +1,20 @@
+var electron, webcontent, fs
+var frameCount = 0
+var frameRate = 24
+var timeScale = 1
+
+try {
+    electron = require('electron')
+    webcontent = electron.remote.getCurrentWebContents()
+    fs = require('fs')
+    electron.remote.getCurrentWindow().setContentSize(1920 / 1, 1080 / 1)
+} catch (e) {
+    console.log('you are not using electron')
+    timeScale = 1
+}
+
+
+
 function get(url) {
     console.log('get', url)
     let xhr = new XMLHttpRequest()
@@ -10,6 +27,7 @@ function get(url) {
         xhr.send()
     })
 }
+
 
 
 var app = new Vue({
@@ -76,7 +94,7 @@ Promise.all([
     }, 0)
 })
 
-var max_pixel_per_second = 0;
+var max_pixel_per_second = 4;
 var pixel_per_second = 0;
 var container = document.querySelector('.container')
 var past = null
@@ -112,7 +130,11 @@ function setup() {
 
     rollings = Array.from(document.querySelectorAll('.rolling-container'))
 
-
+    if (electron != null)
+        Array.from(document.querySelectorAll('*')).map(element => {
+            element.style.transitionDuration = parseInt(getComputedStyle(element).transitionDuration) * timeScale + 's'
+            element.style.animationDuration = parseInt(getComputedStyle(element).animationDuration) * timeScale + 's'
+        })
     //
     // Wait for images to load
     //
@@ -126,21 +148,29 @@ function setup() {
             // console.log('loaded', img.src, images.filter(x => !x.done))
             if (images.every(x => x.done)) {
                 appelement.scrollTop = 0
+                if (electron != null) electron.ipcRenderer.send('ready')
                 update()
                 container.classList.add('done')
             }
         })
         return obj;
     })
+
 }
 
+var now, past
 
 function update() {
-    appelement.scrollTop += max_pixel_per_second
+
+    now = performance.now()
+
 
     if (pixel_per_second < max_pixel_per_second) pixel_per_second++
     else pixel_per_second = max_pixel_per_second
 
+    if (appelement.scrollTop >= appelement.scrollHeight - innerHeight) {
+        if (electron != null) window.close()
+    }
     requestAnimationFrame(update)
     // console.log('update')
 
@@ -152,8 +182,9 @@ function update() {
     delayshows.map(x => {
         rect = x.getBoundingClientRect()
         if (rect.y < innerHeight - rect.height / 2) {
-            if (x.classList.contains('delay-sequence'))
-                x.style.transitionDelay = rect.x / innerWidth * 0.5 + 0.1 + 's'
+            if (x.classList.contains('delay-sequence')) {
+                x.style.transitionDelay = (rect.x / innerWidth * 0.5 + 0.1) * timeScale + 's'
+            }
             x.classList.add('show')
         }
     })
@@ -201,4 +232,22 @@ function update() {
     //     ) + 'px'
     // }
 
+    //
+    // capture screen
+    //
+    // if (past == null) past = now
+    // if (webcontent != null) {
+    //     console.log(frameCount / (now - past) * 1000 * timeScale)
+    //     if (frameCount / (now - past) * 1000 * timeScale <= frameRate) {
+    //         appelement.scrollTop += max_pixel_per_second
+
+    //         // webcontent.capturePage(image => {
+    //         //     fs.writeFileSync('./render/' + frameCount.toString().padStart(5, '0') + '.jpg', image.toJPEG(80))
+    //         // })
+    //         frameCount++
+    //     }
+    // } else {
+    appelement.scrollTop += max_pixel_per_second
+    // }
 }
+

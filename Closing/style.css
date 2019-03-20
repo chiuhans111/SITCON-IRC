@@ -11,6 +11,10 @@ body,
     /* background-color: #f4f1ea; */
 }
 
+html {
+    background-color: white;
+}
+
 #app {
     padding-right: 50px;
     overflow: auto;
@@ -222,6 +226,7 @@ section {
 }
 
 .rolling-group {
+    will-change: transform;
     position: relative;
     float: left;
     clear: both;

@@ -6,8 +6,10 @@ var cp = require('child_process')
 var path = require('path')
 var stream = require('stream')
 
-// electron.app.disableHardwareAcceleration()
+electron.app.disableHardwareAcceleration()
+
 electron.app.on('ready', () => {
+
     let win = new electron.BrowserWindow({
         webPreferences: {
             nodeIntegration: true,
@@ -17,7 +19,7 @@ electron.app.on('ready', () => {
         enableLargerThanScreen: true
     })
     // win.webContents.openDevTools()
-    // win.webContents.setFrameRate(12)
+    // win.webContents.setFrameRate(0)
 
 
     // win.webContents.debugger.on('message', (e, m, p) => {
@@ -29,7 +31,7 @@ electron.app.on('ready', () => {
     // })
     var ffmpeg = cp.spawn('ffmpeg', ['-y',
         '-f', 'image2pipe',
-        '-s', '960x540',
+        '-s', '1920x1080',
         '-framerate', '60',
         // '-c:v', 'libx264',
         '-pix_fmt', 'yuv420p',
@@ -49,6 +51,7 @@ electron.app.on('ready', () => {
     imageStream.pipe(ffmpeg.stdin)
 
     electron.ipcMain.on('end', function () {
+        saveFrame = function () { }
         ffmpeg.stdin.end()
     })
 
@@ -58,26 +61,35 @@ electron.app.on('ready', () => {
         win.webContents.send('render')
     })
 
-    electron.ipcMain.on('e_render', function () {
-        // console.log(':ready to render next')
+    var invalidateTimes = 2
+
+    var newestImg = null
+
+    function saveFrame(img) {
+        ffmpeg.stdin.write(img.toJPEG(100), 'utf8')
+        console.log(frameCount)
+        frameCount++
+        win.webContents.send('render')
+    }
+
+    electron.ipcMain.on('e_render', function (e, data) {
+        // console.log(':ready to render next', data)
+        invalidateTimes = 2
+        win.webContents.invalidate()
+        win.webContents.invalidate()
         ready = true
     })
 
-    win.webContents.on('paint', (e, d, img) => {
-        if (ready) {
-            ready = false
-            console.log(frameCount)
-            // fs.writeFileSync('./render/' + frameCount.toString().padStart(5, '0') + '.jpg', img.toJPEG(80))
-            ffmpeg.stdin.write(img.toJPEG(100), 'utf8')
-            // console.log(img.toPNG())
-            frameCount++
-            win.webContents.send('render')
-            // console.log('begin next frame')
-        } else {
-            console.log('wait for ready')
-        }
-    })
 
+    win.webContents.on('paint', (e, d, img) => {
+        invalidateTimes--
+        // console.log('painting', d)
+        if (ready && invalidateTimes == 0) {
+            ready = false
+            saveFrame(img)
+        }
+        newestImg = img
+    })
 
 
     win.loadFile(__dirname + './index.html')

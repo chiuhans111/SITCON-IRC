@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    <div class="framecount" hidden></div>
     <div id="app">
         <div class="page">
 
@@ -47,17 +48,15 @@
 
                     <div class="rolling">
                         <div class="rolling-container">
-                            <div class="delay-show">
-                                <div class="rolling-group">
-                                    <h1 v-for="i in 2">
-                                        {{group.description}}
-                                    </h1>
-                                </div>
-                                <div class="rolling-group">
-                                    <h2 v-for="i in 2">
-                                        {{group.description}}
-                                    </h2>
-                                </div>
+                            <div class="rolling-group">
+                                <h1 v-for="i in 2">
+                                    {{group.description}}
+                                </h1>
+                            </div>
+                            <div class="rolling-group">
+                                <h2 v-for="i in 2">
+                                    {{group.description}}
+                                </h2>
                             </div>
                         </div>
                     </div>
@@ -124,25 +123,14 @@
                 <h2>個人贊助</h2>
                 <div class="rolling">
                     <div class="rolling-container">
-                        <div class="delay-show">
-                            <div class="rolling-group">
-                                <h2 v-for="i in 2">感恩乾爹讚嘆乾爹
-                                </h2>
-                            </div>
-                            <div class="rolling-group">
-                                <h1 v-for="i in 2">SITCON
-                                    感恩你
-                                </h1>
-                            </div>
-                            <div class="rolling-group">
-                                <h1 v-for="i in 2">SITCON
-                                    愛你們
-                                </h1>
-                            </div>
-                            <div class="rolling-group">
-                                <h2 v-for="i in 2">請多多成為乾爹
-                                </h2>
-                            </div>
+                        <div class="rolling-group">
+                            <h2 v-for="i in 2">感恩乾爹讚嘆乾爹
+                            </h2>
+                        </div>
+                        <div class="rolling-group">
+                            <h1 v-for="i in 2">SITCON
+                                感恩你
+                            </h1>
                         </div>
                     </div>
                 </div>
@@ -162,7 +150,20 @@
                         </template>
                     </div>
                 </div>
+                <div class="rolling">
+                    <div class="rolling-container">
+                        <div class="rolling-group">
+                            <h1 v-for="i in 2">SITCON 愛你們
+                            </h1>
+                        </div>
+                        <div class="rolling-group">
+                            <h2 v-for="i in 2">請多多成為乾爹
+                            </h2>
+                        </div>
+                    </div>
+                </div>
             </section>
+
             <section class="delay-show">
                 <h2>謝謝各位的參加</h2>
                 <h2>我們明年再見！</h2>

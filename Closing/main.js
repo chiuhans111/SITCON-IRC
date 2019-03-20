@@ -125,7 +125,7 @@ Promise.all([
     }, 0)
 })
 
-var max_pixel_per_second = 4;
+var max_pixel_per_second = 6;
 if (electron == null) max_pixel_per_second = 0;
 var pixel_per_second = 0;
 var container = document.querySelector('.container')

@@ -38,7 +38,7 @@ try {
     electron = require('electron')
     webcontent = electron.remote.getCurrentWebContents()
     fs = require('fs')
-    electron.remote.getCurrentWindow().setContentSize(1920 / 1, 1080 / 1)
+    electron.remote.getCurrentWindow().setContentSize(1920 / 2, 1080 / 2)
 } catch (e) {
     console.log('you are not using electron')
     timeScale = 1
@@ -125,7 +125,7 @@ Promise.all([
     }, 0)
 })
 
-var max_pixel_per_second = 3;
+var max_pixel_per_second = 2;
 if (electron == null) max_pixel_per_second = 0;
 var pixel_per_second = 0;
 var container = document.querySelector('.container')
@@ -310,8 +310,11 @@ function update() {
     appelement.scrollTop += max_pixel_per_second
     scrollTop = appelement.scrollTop
 
-    if (scrollTop >= appelement.scrollHeight - innerHeight) {
-        if (electron != null) window.close()
+    if (scrollTop*10 >= appelement.scrollHeight - innerHeight) {
+        if (electron != null) {
+            electron.ipcRenderer.send('end')
+            return;
+        }
     }
 
 

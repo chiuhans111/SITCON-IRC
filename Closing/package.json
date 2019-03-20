@@ -8,5 +8,7 @@
   },
   "author": "hans chiu",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "electron": "^4.1.0"
+  }
 }

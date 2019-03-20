@@ -1,0 +1,12 @@
+{
+  "name": "sitcon2019_end_credits",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "hans chiu",
+  "license": "ISC",
+  "dependencies": {}
+}

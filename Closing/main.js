@@ -211,6 +211,10 @@ function delayShowing(x) {
     }
 }
 
+var filterDelayShows = function (x) {
+    return !x.classList.contains('show')
+}
+
 // ROLLING
 function parallexEffect(x) {
     //rect = x.parentNode.getBoundingClientRect()
@@ -246,7 +250,7 @@ function update() {
     //
     // 顯示延遲顯示的物件
     //
-    delayshows = delayshows.filter(x => !x.classList.contains('show'))
+    delayshows = delayshows.filter(filterDelayShows)
 
     delayshows.map(delayShowing)
 

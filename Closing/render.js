@@ -13,7 +13,7 @@ electron.app.on('ready', () => {
         enableLargerThanScreen: true
     })
     win.webContents.openDevTools()
-    win.webContents.setFrameRate(24/3)
+    // win.webContents.setFrameRate(24/3)
 
 
     // win.webContents.debugger.on('message', (e, m, p) => {

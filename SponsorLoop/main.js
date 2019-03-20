@@ -46,6 +46,7 @@ get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/sponsor
 
         setTimeout(() => {
             app.$destroy()
+            app = null
             setup()
         }, 0)
     })
@@ -53,7 +54,7 @@ get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/sponsor
 var max_pixel_per_second = 150;
 var pixel_per_second = 0;
 var container = document.querySelector('.container')
-var past = null
+var now, past = null
 var scrollTop = 0
 
 
@@ -127,7 +128,7 @@ function update() {
     requestAnimationFrame(update)
 
 
-    var now = Date.now()
+    now = Date.now()
     if (past != null) {
 
         delta = now - past
@@ -151,7 +152,7 @@ function update() {
         //
         // Apply movement
         //
-        
+
         container.scrollTop = Math.round(scrollTop)
     }
     past = now

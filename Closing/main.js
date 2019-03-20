@@ -214,11 +214,15 @@ function loaded() {
 
     // basic setup and start
     container.classList.add('done')
-    if (electron != null) electron.ipcRenderer.send('ready')
-
-    setTimeout(() => {
-        update()
-    }, 0);
+    if (electron != null) {
+        electron.ipcRenderer.on('render', function () {
+            requestAnimationFrame(update)
+        })
+        electron.ipcRenderer.send('ready')
+    } else
+        setTimeout(() => {
+            update()
+        }, 0);
 }
 
 var now, past
@@ -278,6 +282,7 @@ function rollingEffect(x) {
 
     var containers = Array.from(x.querySelectorAll('.rolling-group'))
     var f = rect.y / 30000 % 1
+    while (f < 0) f += 1;
     containers.map((y, i) => {
         var offset = f * 50
         if (i % 2 == 0) offset = 50 - offset
@@ -295,7 +300,7 @@ function rollingEffect(x) {
 
 
 function update() {
-
+    // console.log('update')
     // now = performance.now()
 
 
@@ -308,7 +313,8 @@ function update() {
     if (scrollTop >= appelement.scrollHeight - innerHeight) {
         if (electron != null) window.close()
     }
-    requestAnimationFrame(update)
+
+
     // console.log('update')
 
     //
@@ -376,5 +382,11 @@ function update() {
     // } else {
 
     // }
+
+    if (electron != null) {
+        setTimeout(() => {
+            electron.ipcRenderer.send('e_render')
+        }, 0);
+    } else requestAnimationFrame(update)
 }
 

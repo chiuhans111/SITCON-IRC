@@ -72,8 +72,8 @@ section {
 /* ANIMATION */
 
 .delay-show {
-    opacity: 0;
-    transform: scale(1.5);
+    opacity: 0.01;
+    /* transform: scale(1.5); */
     transition-property: opacity, transform;
     transition-duration: 1s;
 }

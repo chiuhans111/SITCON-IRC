@@ -125,7 +125,7 @@ Promise.all([
     }, 0)
 })
 
-var max_pixel_per_second = 6;
+var max_pixel_per_second = 3;
 if (electron == null) max_pixel_per_second = 0;
 var pixel_per_second = 0;
 var container = document.querySelector('.container')
@@ -384,9 +384,11 @@ function update() {
     // }
 
     if (electron != null) {
-        setTimeout(() => {
-            electron.ipcRenderer.send('e_render')
-        }, 0);
+        requestAnimationFrame(function(){
+            setTimeout(() => {
+                electron.ipcRenderer.send('e_render')
+            }, 0);
+        })
     } else requestAnimationFrame(update)
 }
 

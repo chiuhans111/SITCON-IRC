@@ -1,4 +1,4 @@
-var electron, webcontent, fs
+var electron, webcontent, fs, puppeteer
 var frameCount = 0
 var frameRate = 24
 var timeScale = 1
@@ -225,7 +225,10 @@ function loaded() {
         electron.ipcRenderer.send('ready')
     } else
         setTimeout(() => {
-            update()
+            if (puppeteer)
+                console.log('hey puppeteer! I am ready to render!')
+            else
+                update()
         }, 0);
 }
 
@@ -309,7 +312,7 @@ function rollingEffect(x) {
 //
 
 
-function update() {
+function update(justone) {
     // console.log('update')
     // now = performance.now()
 
@@ -329,6 +332,8 @@ function update() {
         if (electron != null) {
             electron.ipcRenderer.send('end')
             return;
+        } else if (puppeteer === true) {
+            console.log('hey puppeteer! I am Done!')
         }
     }
 
@@ -403,7 +408,10 @@ function update() {
 
     frameCount++;
     frmaeCounter.textContent = frameCount;
-
+    if (puppeteer === true) {
+        console.log('hey puppeteer! I am ready to render!')
+    }
+    if (justone === true) return;
     if (electron != null) {
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
@@ -413,6 +421,7 @@ function update() {
             })
         })
 
-    } else requestAnimationFrame(update)
+    }
+    else requestAnimationFrame(update)
 }
 

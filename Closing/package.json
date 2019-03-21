@@ -9,6 +9,7 @@
   "author": "hans chiu",
   "license": "ISC",
   "dependencies": {
-    "electron": "^4.1.0"
+    "electron": "^4.1.0",
+    "puppeteer": "^1.13.0"
   }
 }

@@ -407,7 +407,9 @@ function update() {
     if (electron != null) {
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
-                electron.ipcRenderer.send('e_render', frameCount)
+                requestAnimationFrame(function () {
+                    electron.ipcRenderer.send('e_render', frameCount)
+                })
             })
         })
 

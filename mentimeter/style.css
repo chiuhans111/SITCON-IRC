@@ -12,7 +12,7 @@ body {
 
 body {
     width: auto;
-    max-width: 400px;
+    max-width: 360px;
     margin: auto;
     padding: 8px;
     box-sizing: border-box;
@@ -20,14 +20,23 @@ body {
     align-items: center;
 }
 
-.qrcode {
+body *{
     flex-grow: 1;
+}
+
+.qrcode {
+    flex-grow: 10;
     width: 100%;
     background-image: url('./qrcode.png');
     background-position:top;
     background-size: contain;
     background-repeat: no-repeat;
     margin: 8px;
+    overflow: hidden;
+}
+
+.qrcode img{
+    width: 100%;
 }
 
 .qrcode-box {

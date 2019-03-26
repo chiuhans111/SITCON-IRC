@@ -12,6 +12,7 @@
         href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:400,900"
         rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
+    <script src="./md5.js"></script>
 </head>
 
 <body>
@@ -138,10 +139,10 @@
                     <div class="list">
                         <template class=""
                             v-for="(name,i) in individual">
-                            <div v-if="i>0"
+                            <!-- <div v-if="i>0"
                                 class="individual delay-show delay-sequence">
                                 /
-                            </div>
+                            </div> -->
                             <div
                                 class="individual delay-show delay-sequence">
                                 {{name}}
@@ -164,7 +165,36 @@
                 </div>
             </section>
 
-            <section class="delay-show">
+            <section class="agenda">
+                <h2>講師與來賓</h2>
+                <div class="list">
+                    <div class="agenda-event delay-show delay-sequence"
+                        v-for="event in agenda"
+                        v-if="event.type!=null">
+                        <span>{{event.zh.title}}</span>
+                        <hr>
+
+                        <div class="list">
+                            <div class="agenda-speaker"
+                                v-for="speaker in event.speakers">
+
+                                <!-- <div
+                                    class="speaker-img-container">
+                                    <img class="speaker-img"
+                                        :src="speaker.avatar"
+                                        alt="">
+                                    <img class="onepx"
+                                        src="./onepx.png"
+                                        alt="">
+                                </div> -->
+                                <div>{{speaker.zh.name}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="thankyou delay-show">
                 <h2>謝謝各位的參加</h2>
                 <h2>我們明年再見！</h2>
             </section>

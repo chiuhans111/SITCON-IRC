@@ -4,9 +4,11 @@ const cp = require('child_process');
 
 (async () => {
     // Use Puppeteer to launch a browser and open a page.
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: true , args:[
+        '--disable-gpu'
+    ]});
     const page = await browser.newPage();
-    
+
     page.setViewport({
         width: 1920,
         height: 1080
@@ -29,31 +31,34 @@ const cp = require('child_process');
     ffmpeg.on('close', () => console.log('done!'))
     var frameCount = 0
     var terminate = false
-    await page.on('console', async msg => {
-        // console.log(msg.text())
-        if (!terminate)
-            if (msg.text() == 'hey puppeteer! I am ready to render!') {
-                setTimeout(async () => {
-                    var buffer = await page.screenshot({
-                        type: 'jpeg',
-                        quality: 100
-                    })
-                    ffmpeg.stdin.write(buffer)
-                    frameCount++
-                    console.log('rendered', frameCount)
-                    page.evaluate('update(true)')
-                }, 0);
-            } else if (msg.text() == 'hey puppeteer! I am Done!') {
-                ffmpeg.stdin.end()
-                terminate = true
-            }
+
+
+    await page.goto(__dirname + '/index.html');
+
+    page.exposeFunction('pup_render', async frame => {
+        return new Promise(async done => {
+            ffmpeg.stdin.write(await page.screenshot({
+                type: 'jpeg',
+                quality: 100
+            }))
+            frameCount++
+            console.log('rendered', frameCount)
+            done()
+        })
     })
+
+    page.exposeFunction('pup_end', () => {
+        ffmpeg.stdin.end()
+        terminate = true
+    })
+
+
 
 
 
     // page.evaluate('update(true)')
 
     // Check it out! Fast animations on the "loading..." screen!
-    await page.goto(__dirname + '/index.html');
+
     await page.evaluate('puppeteer=true')
 })();

@@ -69,6 +69,7 @@ var app = new Vue({
         sponsors: [],
         staff: [],
         individual: [],
+        agenda: []
     },
     methods: {
         level2name(level) {
@@ -88,12 +89,20 @@ var app = new Vue({
 
 Promise.all([
     get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/sponsor.json'),
-    get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/staff.json'),
-    get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/individual-sponsor.json')
+    // get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/staff.json'),
+    get('./staff.json'),
+    get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/individual-sponsor.json'),
+    get('https://sitcon.org/2019/static/json/agenda.json'),
 ]).then(function (data) {
-    var [sponsors, staff, individual] = data.map(x => JSON.parse(x))
+    console.log(data)
 
-    console.log(sponsors)
+    var sponsors = JSON.parse(data[0])
+    var staff = JSON.parse(data[1])
+    var individual = JSON.parse(data[2])
+    var agenda = JSON.parse(data[3])
+
+
+    console.log(staff)
 
     //
     // SPONSORS
@@ -111,6 +120,46 @@ Promise.all([
     // STAFF
     //
     app.$data.staff = staff
+
+    //
+    // agenda
+    //
+
+    app.$data.agenda = agenda
+
+    //
+    // STAFF 2
+    //
+    // staff2.map(ss => {
+    //     let name = ss[0]
+    //     let email = ss[1]
+    //     let groups = ss.slice(2)
+    //     let emailmd5 = md5(email)
+
+    //     groups.map(g => {
+
+    //         let gg = staff.filter(group => {
+    //             return group.name == g
+    //         })
+
+    //         if (gg.length != 1) console.log('find group failed', g, gg)
+    //         let mm = gg[0].members.filter(m => {
+    //             return m.name == name
+    //         })
+    //         if (mm.length != 1) console.log('find people failed', ss, mm, emailmd5)
+    //         mm[0].finded = true
+    //     })
+    // })
+
+    // staff.map(group => {
+    //     group.members.map(m => {
+    //         if (!m.finded) {
+    //             console.log(group.name)
+    //             console.log(m.name)
+    //         }
+
+    //     })
+    // })
 
     //
     // INDIVIDUAL
@@ -226,7 +275,7 @@ function loaded() {
     } else
         setTimeout(() => {
             if (puppeteer)
-                console.log('hey puppeteer! I am ready to render!')
+                pup_render(0).then(update)
             else
                 update()
         }, 0);
@@ -333,7 +382,7 @@ function update(justone) {
             electron.ipcRenderer.send('end')
             return;
         } else if (puppeteer === true) {
-            console.log('hey puppeteer! I am Done!')
+            pup_end()
         }
     }
 
@@ -409,14 +458,14 @@ function update(justone) {
     frameCount++;
     frmaeCounter.textContent = frameCount;
     if (puppeteer === true) {
-        console.log('hey puppeteer! I am ready to render!')
-    }
-    if (justone === true) return;
-    if (electron != null) {
+        pup_render(frameCount).then(update)
+    } else if (electron != null) {
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
                 requestAnimationFrame(function () {
-                    electron.ipcRenderer.send('e_render', frameCount)
+                    requestAnimationFrame(function () {
+                        electron.ipcRenderer.send('e_render', frameCount)
+                    })
                 })
             })
         })

@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:400,900|Noto+Sans+TC:400,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:400,600,900|Noto+Sans+TC:400,600,900"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gochi+Hand" rel="stylesheet">
     <style>
         html,
         body {
@@ -21,9 +23,10 @@
 
         body {
             background-image: url("./bg.png");
+            background-color: white;
             background-size: contain;
             background-position: center;
-            /* transform: scale(0.2); */
+            /* transform: scale(0.4); */
         }
 
 
@@ -31,6 +34,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: flex-end;
             width: 100%;
             height: 600px;
             padding: 0px 20px;
@@ -46,39 +50,66 @@
         }
 
         .title {
-
+            /* text-align: center; */
+            display: inline;
             position: relative;
             font-size: 7em;
             line-height: 1.2;
-            font-style: italic;
+            /* font-style: italic; */
             top: 0px;
-            margin: 0px auto;
             word-wrap: break-word;
             margin-bottom: 20px;
+            padding: 5px;
+            z-index: 2;
+            color: black;
+            margin-right: -200px;
+            padding-right: 200px;
+            margin-left: -200px;
+            padding-left: 220px;
+            font-weight: 600;
+            transform: rotate(-2deg) scale(0.98) translate(0, -10px);
+            align-self: flex-start;
+        }
+
+        .card {
+            text-shadow: 4px 4px 4px white;
+            background-image: url("card.png");
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
         }
 
         .room {
+            font-family: 'Gochi Hand', cursive;
             position: absolute;
-            top: -80px;
-            left: -80px;
-            font-size: 60em;
-            opacity: 0.2;
-            color: rgb(100, 52, 37);
+            bottom: 100px;
+            left: 100px;
+            font-size: 10em;
+            color: black;
             line-height: 1;
             margin: 0;
             font-style: italic;
             z-index: 1;
+            opacity: .95;
+            text-shadow: 0px 0px 40px rgb(214, 186, 167);
+            font-style: italic;
         }
 
         .names {
+            display: block;
             margin: 0px;
+            padding-right: 20px;
+            margin-right: -20px;
             font-size: 4em;
             position: relative;
             text-align: right;
+            /* background: linear-gradient(to right,
+                rgba(214, 186, 167, 0) 0%,
+                rgba(214, 186, 167, 1) 94%,
+                rgba(214, 186, 167, 1) 100%); */
+            z-index: 2;
         }
 
         .name2 {
-            font-size: 0.8em;
+            font-size: 0.5em;
             font-weight: 400;
         }
 
@@ -87,26 +118,18 @@
             margin: 0px 10px;
         }
 
-        .names::before {
-            display: inline-block;
-            content: ' ';
-            border-bottom: 3px solid #A88C6F;
-            width: 150px;
-            height: 0px;
-            margin: 20px;
-        }
-
         .type {
             position: absolute;
             left: 0;
             bottom: 0;
             display: inline;
-            padding: 4px 16px;
+            padding: 4px 10px;
             font-size: 5em;
             margin: 0px;
-            color: white;
+            color: #A88C6F;
             z-index: 2;
-            transform: translate(40px, 0);
+            transform: translate(10px, 0);
+            font-weight: 900;
         }
 
         .type::before {
@@ -115,7 +138,7 @@
             content: '';
             display: block;
             position: absolute;
-            background-color: #A88C6F;
+            background-color: white;
             width: 100%;
             height: 100%;
             z-index: -1;
@@ -128,24 +151,21 @@
             right: 0px;
             content: '';
             position: absolute;
-            border-left: solid 80px #A88C6F;
+            border-left: solid 80px white;
             border-top: solid 40px transparent;
             height: 100%;
             top: 0px;
-            transform: translate(100%, 0) translate(-40px, 0);
+            transform: translate(100%, 0) translate(-42px, 0);
             z-index: -1;
         }
 
         .role {
-            display: inline-block;
-            font-size: .6em;
-            background-color: black;
-            color: orange;
+            font-size: .4em;
             padding: 10px;
             text-align: center;
             margin: 10px;
             border-radius: 500px;
-
+            display: none;
         }
 
         .images {
@@ -167,7 +187,7 @@
             margin: 0px 10px;
             z-index: 2;
             top: 0px;
-            transform: translate(0, 25%) scale(1.1);
+            transform: translate(0, 10%) scale(1.1);
         }
 
         .bg {
@@ -176,6 +196,10 @@
             height: 100%;
             background-size: cover;
             background-position: center;
+            filter: blur(2px) brightness(1.4) grayscale(1) contrast(300) blur(1px) sepia(1) ;
+            transform: scale(1.1);
+            opacity: .3;
+            mix-blend-mode: overlay;
         }
     </style>
 </head>
@@ -185,8 +209,8 @@
     <div class="content">
         <div class="images"></div>
         <h1 class="room">R0</h1>
-        <h1 class="title">甜食與他的產地甜食與他的產地甜食與他的產地</h1>
-        <h2 class="names"></h2>
+        <h1 class="title card">甜食與他的產地甜食與他的產地甜食與他的產地</h1>
+        <h2 class="names card"></h2>
         <p class="type"></p>
     </div>
 
@@ -198,7 +222,7 @@
         1: 'R0_open',
         2: 'R0_key1',
         3: 'R0_key2',
-        4: null, // 'R0_query',
+        4: 'R0_query',
         5: null, // 'lunch',
         6: null, // 'R0_algorithm',
         7: null, // 'break',
@@ -208,7 +232,7 @@
         11: 'R0_news',
         12: 'R0_school',
         13: 'R0_lightning',
-        14: null, // 'R0_close',
+        14: 'R0_close',
         15: null, // 'R1_new',
         16: null, // 'R1_google',
         17: 'R1_484',
@@ -222,14 +246,14 @@
         25: 'R2_php',
         26: 'R2_pe',
         27: 'R2_vr',
-        28: null, // 'R2_net',
+        28: 'R2_net',
         29: 'R2_cloud',
         30: 'R2_linux',
         31: 'R3_rex',
         32: 'R3_functional',
-        33: null, // 'R3_room',
-        34: null, // 'R3_game',
-        35: null, // 'R3_win',
+        33: 'R3_room',
+        34: 'R3_game',
+        35: 'R3_win',
         36: 'R2_104',
         37: null, // 點心
         38: null, // break
@@ -251,8 +275,8 @@
     var noWrapList = [
         '商管', '演算法', '食息日常', '初學路上',
         '什麼', '是大斗內', '點數系統', '一起', '作為',
-        '搜尋引擎', '尋找光明', '在與未來', '與決定', '开箱即用', '過得還好嗎',
-        '不想停的算計'
+        '搜尋引擎', '尋找光明', '過去現在與未來', '與決定', '开箱即用', '過得還好嗎',
+        '不想停的算計', '學習大總匯', '如何'
     ]
 
     var xhr = new XMLHttpRequest()
@@ -262,6 +286,24 @@
     xhr.onload = function () {
 
         var agenda = JSON.parse(xhr.response)
+
+        //
+        // TITLE
+        //
+
+        var model = agenda[n]
+
+        var outputName = model.room + "_"
+            + timecode(model.start) + "_"
+            + timecode(model.end) + "_"
+            + model.zh.title + "_" + model.speakers.filter(x => x.zh).map(x => x.zh.name).join('_')
+        outputName = outputName.replace(/[<>#%\{\}\|\\\^~\[\]`;\?？:@=&\/]/g, '-')
+        document.title = outputName
+
+        //
+        // FIX TITLE
+        //
+
         noWrapList.map(word => {
             agenda[n].zh.title =
                 agenda[n].zh.title.replace(
@@ -275,8 +317,14 @@
         agenda[n].zh.title = agenda[n].zh.title.replace(/）/, ")")
         agenda[n].zh.title = agenda[n].zh.title.replace(/，/, ",")
         agenda[n].zh.title = agenda[n].zh.title.replace(/？/, "?")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/手把手玩/, "手把手玩</br>")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/靠自己─/, "靠自己─</br>")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/學校到業界,/, "學校到業界,</br>")
 
-        document.querySelector('.title').textContent = agenda[n].zh.title
+
+
+
+        document.querySelector('.title').innerHTML = agenda[n].zh.title
 
         document.querySelector('.room').textContent = agenda[n].room
         document.querySelector('.type').textContent = agenda[n].type
@@ -331,14 +379,8 @@
             document.querySelector('.names').append(all)
         }).join(', ')
 
-        var model = agenda[n]
 
-        var outputName = model.room + "_"
-            + timecode(model.start) + "_"
-            + timecode(model.end) + "_"
-            + model.zh.title + "_" + model.speakers.filter(x => x.zh).map(x => x.zh.name).join('_')
-        outputName = outputName.replace(/[<>#%\{\}\|\\\^~\[\]`;\?？:@=&\/]/g, '-')
-        document.title = outputName
+
         addEventListener('keydown', function (e) {
             if (e.key == 'ArrowLeft') location.href = './index.html?n=' + (n - 1)
             if (e.key == 'ArrowRight') location.href = './index.html?n=' + (+n + 1)
@@ -348,11 +390,11 @@
         if (videoimg[n] != null) {
             images++
             var vidimg = document.createElement('img')
-            vidimg.src = './videoimg/' + videoimg[n] + '.jpg'
             vidimg.onload = function () {
                 images--
                 if (images == 0) done()
             }
+            vidimg.src = './videoimg/' + videoimg[n] + '.jpg'
             document.querySelector('.bg').style.backgroundImage = 'url("' + vidimg.src + '")'
         }
 

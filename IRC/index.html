@@ -65,7 +65,7 @@
             timeDIV.setAttribute('class', 'time')
             timeDIV.appendChild(text)
             wordDIV.setAttribute('class', 'word')
-            wordDIV.innerHTML = `${data.from.username}: ${data.text}`
+            wordDIV.textContent = `${data.from.username}: ${data.text}`
             messageDIV.appendChild(timeDIV)
             messageDIV.appendChild(wordDIV)
             document.querySelector('#messages').appendChild(messageDIV)
@@ -91,7 +91,7 @@
             timeDIV.setAttribute('class', 'time')
             timeDIV.appendChild(text)
             wordDIV.setAttribute('class', 'word')
-            wordDIV.innerHTML = `${data.from.username}: <img>`
+            wordDIV.textContent = `${data.from.username}: <img>`
             messageDIV.appendChild(timeDIV)
             messageDIV.appendChild(wordDIV)
             document.querySelector('#messages').appendChild(messageDIV)
@@ -108,7 +108,7 @@
             timeDIV.setAttribute('class', 'time')
             timeDIV.appendChild(text)
             wordDIV.setAttribute('class', 'word')
-            wordDIV.innerHTML = `${data.from.username}: ${data.sticker.emoji}`
+            wordDIV.textContent = `${data.from.username}: ${data.sticker.emoji}`
             messageDIV.appendChild(timeDIV)
             messageDIV.appendChild(wordDIV)
             document.querySelector('#messages').appendChild(messageDIV)

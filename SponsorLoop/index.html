@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./vue.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./loading.css">
+</head>
+
+<body>
+
+    <div id="app">
+        <div class="container">
+            <div class="overlay">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div>
+            <div class="group" v-for="x in 3">
+                <template v-for="(sponsor, i) in sponsors"
+                    v-if="level2name(sponsor.level)!=null">
+                    <div v-if="sponsor.firstInClass"
+                        class='tag'>
+                        <div class="anchor">
+                            <img class="tag-img"
+                                :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
+                                alt="">
+                        </div>
+                        <div class="text"
+                            :id="sponsor.level">
+                            <img class="tag-img"
+                                :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
+                                alt="">
+                            <!-- {{level2name(sponsor.level)}} -->
+                        </div>
+                    </div>
+                    <div class="sponser">
+
+                        <img :src="'https://sitcon.org/2019/static/img/sponsor/'+sponsor.image"
+                            alt="">
+                    </div>
+
+                    <!-- <span>{{sponsor.name}}</span>
+                    <span>{{sponsor.description}}</span> -->
+                </template>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./main.js"></script>
+
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+SC:400,600,900|Noto+Sans+TC:400,600,900"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gochi+Hand" rel="stylesheet">
+    <style>
+        html,
+        body {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            overflow: hidden;
+            background-color: black;
+            margin: 0px;
+            font-family: "Noto Sans TC", "Noto Sans SC", "微軟正黑體";
+        }
+
+        body {
+            background-image: url("./bg.png");
+            background-color: white;
+            background-size: contain;
+            background-position: center;
+            /* transform: scale(0.4); */
+        }
+
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            width: 100%;
+            height: 600px;
+            padding: 0px 20px;
+            box-sizing: border-box;
+        }
+
+        .mainvisual {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            transform: translate(20%, 20%);
+            width: 70%;
+        }
+
+        .title {
+            /* text-align: center; */
+            display: inline;
+            position: relative;
+            font-size: 7em;
+            line-height: 1.2;
+            /* font-style: italic; */
+            top: 0px;
+            word-wrap: break-word;
+            margin-bottom: 20px;
+            padding: 5px;
+            z-index: 2;
+            color: black;
+            margin-right: -200px;
+            padding-right: 200px;
+            margin-left: -200px;
+            padding-left: 220px;
+            font-weight: 600;
+            transform: rotate(-2deg) scale(0.98) translate(0, -10px);
+            align-self: flex-start;
+        }
+
+        .card {
+            text-shadow: 4px 4px 4px white;
+            background-image: url("card.png");
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .room {
+            font-family: 'Gochi Hand', cursive;
+            position: absolute;
+            bottom: 100px;
+            left: 100px;
+            font-size: 10em;
+            color: black;
+            line-height: 1;
+            margin: 0;
+            font-style: italic;
+            z-index: 1;
+            opacity: .95;
+            text-shadow: 0px 0px 40px rgb(214, 186, 167);
+            font-style: italic;
+        }
+
+        .names {
+            display: block;
+            margin: 0px;
+            padding-right: 20px;
+            margin-right: -20px;
+            font-size: 4em;
+            position: relative;
+            text-align: right;
+            /* background: linear-gradient(to right,
+                rgba(214, 186, 167, 0) 0%,
+                rgba(214, 186, 167, 1) 94%,
+                rgba(214, 186, 167, 1) 100%); */
+            z-index: 2;
+        }
+
+        .name2 {
+            font-size: 0.5em;
+            font-weight: 400;
+        }
+
+        .speaker {
+            display: inline-block;
+            margin: 0px 10px;
+        }
+
+        .type {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            display: inline;
+            padding: 4px 10px;
+            font-size: 5em;
+            margin: 0px;
+            color: #A88C6F;
+            z-index: 2;
+            transform: translate(10px, 0);
+            font-weight: 900;
+        }
+
+        .type::before {
+            left: 0px;
+            top: 0px;
+            content: '';
+            display: block;
+            position: absolute;
+            background-color: white;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transform: translate(-40px, 0);
+
+        }
+
+
+        .type::after {
+            right: 0px;
+            content: '';
+            position: absolute;
+            border-left: solid 80px white;
+            border-top: solid 40px transparent;
+            height: 100%;
+            top: 0px;
+            transform: translate(100%, 0) translate(-42px, 0);
+            z-index: -1;
+        }
+
+        .role {
+            font-size: .4em;
+            padding: 10px;
+            text-align: center;
+            margin: 10px;
+            border-radius: 500px;
+            display: none;
+        }
+
+        .images {
+            position: absolute;
+            z-index: 0;
+        }
+
+        .images img {
+            width: 33%;
+            border-radius: 999px;
+            opacity: .4;
+            transform: scale(2);
+        }
+
+        .speaker img {
+            position: relative;
+            height: 100px;
+            border-radius: 8px;
+            margin: 0px 10px;
+            z-index: 2;
+            top: 0px;
+            transform: translate(0, 10%) scale(1.1);
+        }
+
+        .bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(2px) brightness(1.4) grayscale(1) contrast(300) blur(1px) sepia(1) ;
+            transform: scale(1.1);
+            opacity: .3;
+            mix-blend-mode: overlay;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg"></div>
+    <div class="content">
+        <div class="images"></div>
+        <h1 class="room">R0</h1>
+        <h1 class="title card">甜食與他的產地甜食與他的產地甜食與他的產地</h1>
+        <h2 class="names card"></h2>
+        <p class="type"></p>
+    </div>
+
+</body>
+<script>
+
+
+    var videoimg = {
+        1: 'R0_open',
+        2: 'R0_key1',
+        3: 'R0_key2',
+        4: 'R0_query',
+        5: null, // 'lunch',
+        6: null, // 'R0_algorithm',
+        7: null, // 'break',
+        8: 'R0_p',
+        9: 'R0_wiki',
+        10: 'R0_ai',
+        11: 'R0_news',
+        12: 'R0_school',
+        13: 'R0_lightning',
+        14: 'R0_close',
+        15: null, // 'R1_new',
+        16: null, // 'R1_google',
+        17: 'R1_484',
+        18: 'R1_tool',
+        19: 'R1_donate',
+        20: 'R1_point',
+        21: 'R1_hack',
+        22: 'R1_village',
+        23: 'R2_1min',
+        24: 'R2_micro',
+        25: 'R2_php',
+        26: 'R2_pe',
+        27: 'R2_vr',
+        28: 'R2_net',
+        29: 'R2_cloud',
+        30: 'R2_linux',
+        31: 'R3_rex',
+        32: 'R3_functional',
+        33: 'R3_room',
+        34: 'R3_game',
+        35: 'R3_win',
+        36: 'R2_104',
+        37: null, // 點心
+        38: null, // break
+        39: null, // break
+        40: null, // 'R3_iot'
+    }
+
+
+
+    /**
+     * 從時間字串產生 "小時分鐘" 格式的四位數字串
+     * @param {string} time 代表時間的字串
+     */
+    function timecode(time) {
+        var t = new Date(time)
+        return t.getHours().toString().padStart(2, 0) + t.getMinutes().toString().padStart(2, 0)
+    }
+
+    var noWrapList = [
+        '商管', '演算法', '食息日常', '初學路上',
+        '什麼', '是大斗內', '點數系統', '一起', '作為',
+        '搜尋引擎', '尋找光明', '過去現在與未來', '與決定', '开箱即用', '過得還好嗎',
+        '不想停的算計', '學習大總匯', '如何'
+    ]
+
+    var xhr = new XMLHttpRequest()
+    var n = new URL(location.href, location.origin).searchParams.get('n')
+    console.log(n)
+    xhr.open('get', 'https://sitcon.org/2019/static/json/agenda.json')
+    xhr.onload = function () {
+
+        var agenda = JSON.parse(xhr.response)
+
+        //
+        // TITLE
+        //
+
+        var model = agenda[n]
+
+        var outputName = model.room + "_"
+            + timecode(model.start) + "_"
+            + timecode(model.end) + "_"
+            + model.zh.title + "_" + model.speakers.filter(x => x.zh).map(x => x.zh.name).join('_')
+        outputName = outputName.replace(/[<>#%\{\}\|\\\^~\[\]`;\?？:@=&\/]/g, '-')
+        document.title = outputName
+
+        //
+        // FIX TITLE
+        //
+
+        noWrapList.map(word => {
+            agenda[n].zh.title =
+                agenda[n].zh.title.replace(
+                    new RegExp(word, 'g'),
+                    [...word].join('\uFEFF')
+                )
+        })
+        agenda[n].zh.title = agenda[n].zh.title.replace("！", "!")
+        // agenda[n].zh.title = agenda[n].zh.title.replace(/\s/, "")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/（/, "(")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/）/, ")")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/，/, ",")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/？/, "?")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/手把手玩/, "手把手玩</br>")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/靠自己─/, "靠自己─</br>")
+        agenda[n].zh.title = agenda[n].zh.title.replace(/學校到業界,/, "學校到業界,</br>")
+
+
+
+
+        document.querySelector('.title').innerHTML = agenda[n].zh.title
+
+        document.querySelector('.room').textContent = agenda[n].room
+        document.querySelector('.type').textContent = agenda[n].type
+
+
+        var images = 0
+
+        agenda[n].speakers.map(speaker => {
+            images++
+            var role = ""
+            var name = speaker.zh.name
+            var name2 = ""
+            var rolematch = name.match(/^(.+)\s*-\s*(.+)$/)
+            if (rolematch) {
+                role = rolematch[1]
+                name = rolematch[2]
+            }
+
+            var namematch = name.match(/^(.+)\/(.+)$/)
+            if (namematch == null)
+                namematch = name.match(/^(.+)\((.+)\)$/)
+            if (namematch) {
+                name = namematch[1]
+                name2 = namematch[2]
+            }
+            var all = document.createElement('span')
+            var rspan = document.createElement('span')
+            var nspan = document.createElement('span')
+            var n2span = document.createElement('span')
+            rspan.classList.add('role')
+            nspan.classList.add('name')
+            n2span.classList.add('name2')
+            all.classList.add('speaker')
+            rspan.textContent = role
+            nspan.textContent = name
+            if (name2.trim().length > 0)
+                n2span.textContent = '/' + name2
+            if (role.trim().length > 0)
+                all.append(rspan)
+
+
+            var img = document.createElement('img')
+            img.src = speaker.avatar
+            all.append(img)
+            all.append(nspan)
+            all.append(n2span)
+            img.onload = function () {
+                images--
+                if (images == 0) done()
+            }
+
+            document.querySelector('.names').append(all)
+        }).join(', ')
+
+
+
+        addEventListener('keydown', function (e) {
+            if (e.key == 'ArrowLeft') location.href = './index.html?n=' + (n - 1)
+            if (e.key == 'ArrowRight') location.href = './index.html?n=' + (+n + 1)
+        })
+
+
+        if (videoimg[n] != null) {
+            images++
+            var vidimg = document.createElement('img')
+            vidimg.onload = function () {
+                images--
+                if (images == 0) done()
+            }
+            vidimg.src = './videoimg/' + videoimg[n] + '.jpg'
+            document.querySelector('.bg').style.backgroundImage = 'url("' + vidimg.src + '")'
+        }
+
+
+
+        if (images == 0) done()
+
+    }
+    xhr.send()
+</script>
+
+</html>

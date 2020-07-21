@@ -3,14 +3,139 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SITCON 聊天室</title>
     <link rel="stylesheet" href="./main.css">
-    <script>
-        // WebSocket handler
+    <link rel="stylesheet" href="./loading.css">
+</head>
+
+<body>
+    <div class="overlay">
+        <div class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <div id="messages">
+    </div>
+</body>
+<script>
+
+
+
+    function SET_LOADING() {
+        document.body.classList.add('status-loading')
+    }
+
+    function SET_OFFLINE() {
+        document.body.classList.add('status-offline')
+    }
+
+    function SET_DONE() {
+        if (getToday_loaded && socket_connected) {
+            document.body.classList.remove('status-offline')
+            document.body.classList.remove('status-loading')
+            document.body.classList.add('status-done')
+        }
+    }
+
+
+    var parser = new DOMParser()
+    SET_LOADING();
+    var getToday_loaded = false;
+    function getToday() {
+        let xhr;
+        let timeout = setTimeout(() => {
+            if (getToday_loaded) return;
+            SET_OFFLINE();
+            getToday();
+        }, 1000 * 3);
+
+        xhr = new XMLHttpRequest()
+        xhr.open('get', 'https://cors-anywhere.herokuapp.com/https://ysitd.licson.net/channel/sitcon/today')
+        xhr.onload = function () {
+            if (getToday_loaded) return;
+            getToday_loaded = true;
+            SET_DONE();
+            clearTimeout(timeout);
+            let doc = parser.parseFromString(xhr.response, 'text/html')
+            let messages = doc.querySelectorAll('.message')
+            document.querySelector('#messages').innerHTML = ""
+            messages.forEach(message => {
+                var word = message.querySelector('.word')
+                var from = message.querySelector('.from')
+                if (word) {
+                    var from_name = from.textContent.trim()
+                    if (from_name != 'SITCON-tgBot1') word.textContent = from_name + ': ' + word.textContent
+                    word.textContent = word.textContent.replace(/^<(.+)>/, '$1')
+                }
+                document.querySelector('#messages').appendChild(message)
+
+            })
+            setTimeout(() => {
+                document.body.scrollTo(0, document.body.scrollHeight)
+                setupWebSocket();
+
+            }, 100);
+        }
+        xhr.send()
+    }
+    getToday();
+
+    var retryCount = 0;
+    var waitBeforeRetry = 0;
+    // WebSocket handler
+    var socket_connected = false;
+    function setupWebSocket() {
+
+        if (retryCount > 10) waitBeforeRetry = 500
+        if (retryCount > 20) waitBeforeRetry = 1000
+        if (retryCount > 50) waitBeforeRetry = 2000
+        if (retryCount > 100) {
+            document.body.innerHTML = ":( -- 斷線了"
+            return;
+        }
+
+        let retrying = false;
+        function offline() {
+            if (retrying) return;
+            retrying = true;
+            socket_connected = false;
+            SET_OFFLINE();
+            console.log('已斷線')
+            retryCount++;
+            ws.onopen = null;
+            ws.onclose = null;
+            ws.onerror = null;
+            ws.onmessage = null;
+            ws.close()
+            setTimeout(() => {
+                setupWebSocket()
+            }, waitBeforeRetry);
+        }
+
+        let timeout = setTimeout(() => {
+            if (socket_connected) return;
+            offline();
+        }, 1000 * 5);
+
+
         let ws = new WebSocket('ws://139.162.113.186:8080') // 晚點給
+
+        window.ws = ws;
+
+
         ws.onopen = e => {
+            socket_connected = true;
+            retryCount = 0;
+            waitBeforeRetry = 0;
+            SET_DONE();
+            clearTimeout(timeout)
             console.log('Connection to server opened:' + ws.readyState)
             /* 很重要！！！！ 一定要宣告！！！！ */
             ws.send(JSON.stringify({
@@ -18,12 +143,10 @@
             }))
         }
         ws.onclose = e => {
-            console.log('已斷線')
-            ws = new WebSocket('ws://139.162.113.186:8080')
+            offline();
         }
         ws.onerror = e => {
-            console.log('已斷線')
-            ws = new WebSocket('ws://139.162.113.186:8080')
+            offline();
         }
         ws.onmessage = event => {
             console.log("Message recieved: " + event.data)
@@ -36,118 +159,115 @@
                     updateMessage(data)
                     break
                 case 'newPhoto':
-                    newPhoto(data)
+                    // newPhoto(data)
                     break
                 case 'newSticker':
                     newSticker(data)
                     break
                 case 'newVideo':
-                    newVideo(data)
+                    // newVideo(data)
                     break
                 case 'newDocument':
-                    newDocument(data)
+                    // newDocument(data)
                     break
                 default:
             }
-            document.querySelector('#messages').scrollTo(0, document.querySelector('#messages').scrollHeight)
+            document.body.scrollTo(0, document.body.scrollHeight)
         }
+    }
 
-        // 有新訊息時 call 這個
-        function newMessage(data) {
-            // do something here
-            let messageDIV = document.createElement('div')
-            let timeDIV = document.createElement('div')
-            let wordDIV = document.createElement('div')
-            let text = document.createElement('a')
-            messageDIV.setAttribute('id', `M${data.message_id}`)
-            messageDIV.setAttribute('class', 'message')
-            text.innerHTML = transferTime(data.date)
-            timeDIV.setAttribute('class', 'time')
-            timeDIV.appendChild(text)
-            wordDIV.setAttribute('class', 'word')
-            wordDIV.textContent = `${data.from.username}: ${data.text}`
-            messageDIV.appendChild(timeDIV)
-            messageDIV.appendChild(wordDIV)
-            document.querySelector('#messages').appendChild(messageDIV)
+    // 有新訊息時 call 這個
+    function newMessage(data) {
+        // do something here
+        let messageDIV = document.createElement('div')
+        let timeDIV = document.createElement('div')
+        let wordDIV = document.createElement('div')
+        let text = document.createElement('a')
+        messageDIV.setAttribute('id', `M${data.message_id}`)
+        messageDIV.setAttribute('class', 'message')
+        text.textContent = transferTime(data.date)
+        timeDIV.setAttribute('class', 'time')
+        timeDIV.appendChild(text)
+        wordDIV.setAttribute('class', 'word')
+        wordDIV.textContent = `${data.from.username}: ${data.text}`
+        messageDIV.appendChild(timeDIV)
+        messageDIV.appendChild(wordDIV)
+        document.querySelector('#messages').appendChild(messageDIV)
+    }
+
+    // 原本的訊息被修改時 call 這個
+    function updateMessage(data) {
+        // do something here
+        if (!document.querySelector(`#M${data.message_id} .word`)) {
+            updateDIV = querySelector(`#M${data.message_id} .word`)
+            updateDIV.textContent = data.text
         }
+    }
 
-        // 原本的訊息被修改時 call 這個
-        function updateMessage(data) {
-            // do something here
-            if (!document.querySelector(`#M${data.message_id} .word`)) {
-                updateDIV = querySelector(`#M${data.message_id} .word`)
-                updateDIV.innerHTML = data.text
-            }
-        }
+    function newPhoto(data) {
+        let messageDIV = document.createElement('div')
+        let timeDIV = document.createElement('div')
+        let wordDIV = document.createElement('div')
+        let text = document.createElement('a')
+        messageDIV.setAttribute('id', `M${data.message_id}`)
+        messageDIV.setAttribute('class', 'message')
+        text.textContent = transferTime(data.date)
+        timeDIV.setAttribute('class', 'time')
+        timeDIV.appendChild(text)
+        wordDIV.setAttribute('class', 'word')
+        wordDIV.textContent = `${data.from.username}: <img>`
+        messageDIV.appendChild(timeDIV)
+        messageDIV.appendChild(wordDIV)
+        document.querySelector('#messages').appendChild(messageDIV)
+    }
 
-        function newPhoto(data) {
-            let messageDIV = document.createElement('div')
-            let timeDIV = document.createElement('div')
-            let wordDIV = document.createElement('div')
-            let text = document.createElement('a')
-            messageDIV.setAttribute('id', `M${data.message_id}`)
-            messageDIV.setAttribute('class', 'message')
-            text.innerHTML = transferTime(data.date)
-            timeDIV.setAttribute('class', 'time')
-            timeDIV.appendChild(text)
-            wordDIV.setAttribute('class', 'word')
-            wordDIV.textContent = `${data.from.username}: <img>`
-            messageDIV.appendChild(timeDIV)
-            messageDIV.appendChild(wordDIV)
-            document.querySelector('#messages').appendChild(messageDIV)
-        }
+    function newSticker(data) {
+        let messageDIV = document.createElement('div')
+        let timeDIV = document.createElement('div')
+        let wordDIV = document.createElement('div')
+        let text = document.createElement('a')
+        messageDIV.setAttribute('id', `M${data.message_id}`)
+        messageDIV.setAttribute('class', 'message')
+        text.textContent = transferTime(data.date)
+        timeDIV.setAttribute('class', 'time')
+        timeDIV.appendChild(text)
+        wordDIV.setAttribute('class', 'word')
+        wordDIV.textContent = `${data.from.username}: ${data.sticker.emoji}`
+        messageDIV.appendChild(timeDIV)
+        messageDIV.appendChild(wordDIV)
+        document.querySelector('#messages').appendChild(messageDIV)
+    }
 
-        function newSticker(data) {
-            let messageDIV = document.createElement('div')
-            let timeDIV = document.createElement('div')
-            let wordDIV = document.createElement('div')
-            let text = document.createElement('a')
-            messageDIV.setAttribute('id', `M${data.message_id}`)
-            messageDIV.setAttribute('class', 'message')
-            text.innerHTML = transferTime(data.date)
-            timeDIV.setAttribute('class', 'time')
-            timeDIV.appendChild(text)
-            wordDIV.setAttribute('class', 'word')
-            wordDIV.textContent = `${data.from.username}: ${data.sticker.emoji}`
-            messageDIV.appendChild(timeDIV)
-            messageDIV.appendChild(wordDIV)
-            document.querySelector('#messages').appendChild(messageDIV)
-        }
+    function newVideo() {
 
-        function newVideo() {
+    }
 
-        }
+    function newDocument() {
 
-        function newDocument() {
+    }
 
-        }
+    function transferTime(time) {
+        let nowTime = new Date(time * 1000)
+        let AMPM = 'AM'
+        if (nowTime.getHours() >= 12) AMPM = 'PM'
+        if (nowTime.getSeconds() < 10) return `${AMPM} ${nowTime.getHours()}:${nowTime.getMinutes()}:0${nowTime.getSeconds()}`
+        else return `${AMPM} ${nowTime.getHours()}:${nowTime.getMinutes()}:${nowTime.getSeconds()}`
+    }
 
-        function transferTime(time) {
-            let nowTime = new Date(time * 1000)
-            let AMPM = 'AM'
-            if (nowTime.getHours() >= 12) AMPM = 'PM'
-            if (nowTime.getSeconds() < 10) return `${AMPM} ${nowTime.getHours()}:${nowTime.getMinutes()}:0${nowTime.getSeconds()}`
-            else return `${AMPM} ${nowTime.getHours()}:${nowTime.getMinutes()}:${nowTime.getSeconds()}`
-        }
+    window.onload = () => {
+        // if (!document.cookie) {
+        //     document.querySelector('#messages').textContent = '<div class="title">SITCON 聊天室</div>'
+        // } else {
+        //     document.querySelector('#messages').textContent = document.cookie
+        // }
+        // document.querySelector('#messages').scrollTo(0, document.querySelector('#messages').scrollHeight)
+    }
 
-        window.onload = () => {
-            if (!document.cookie) {
-                document.querySelector('#messages').innerHTML = '<div class="title">SITCON 聊天室</div>'
-            } else {
-                document.querySelector('#messages').innerHTML = document.cookie
-            }
-            document.querySelector('#messages').scrollTo(0, document.querySelector('#messages').scrollHeight)
-        }
+    window.onunload = () => {
+        // document.cookie = document.querySelector('#messages').textContent
+    }
 
-        window.onunload = () => {
-            document.cookie = document.querySelector('#messages').innerHTML
-        }
-    </script>
-</head>
+</script>
 
-<body>
-    <div id="messages">
-    </div>
-</body>
 
 </html>

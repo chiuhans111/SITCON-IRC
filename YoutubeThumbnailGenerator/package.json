@@ -1,0 +1,14 @@
+{
+  "name": "youtubethumbnailgenerator",
+  "version": "1.0.0",
+  "description": "generate SITCON 2019 youtube thumbnails",
+  "main": "render.js",
+  "scripts": {
+    "test": "node render.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^1.13.0"
+  }
+}

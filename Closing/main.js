@@ -88,18 +88,17 @@ var app = new Vue({
 })
 
 Promise.all([
-    get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/sponsor.json'),
-    // get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/staff.json'),
-    get('./staff.json'),
-    get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/individual-sponsor.json'),
-    get('https://sitcon.org/2019/static/json/agenda.json'),
+    get('https://sitcon.org/2020/json/sponsor.json'),
+    get('https://sitcon.org/2020/json/staff.json'),
+    // get('https://sitcon.org/2020/json/individual-sponsor.json'),
+    get('https://sitcon.org/2020/json/session.json'),
 ]).then(function (data) {
     console.log(data)
 
     var sponsors = JSON.parse(data[0])
     var staff = JSON.parse(data[1])
-    var individual = JSON.parse(data[2])
-    var agenda = JSON.parse(data[3])
+    // var individual = JSON.parse(data[2])
+    var agenda = JSON.parse(data[2])
 
 
     console.log(staff)
@@ -164,7 +163,7 @@ Promise.all([
     //
     // INDIVIDUAL
     //
-    app.$data.individual = individual
+    // app.$data.individual = individual
 
 
     //

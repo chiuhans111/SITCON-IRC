@@ -58,7 +58,7 @@ h1 {
 
 h2 {
     font-size: 5em;
-    color: #604726;
+    color: black;
     font-weight: 900;
 }
 
@@ -280,11 +280,11 @@ section {
     position: relative;
     float: left;
     clear: both;
-    background-color: #e7dfcc;
+    background-color: lightgray;
 }
 
 .rolling-group * {
-    color: #f8f3e8;
+    color: white;
     font-weight: bold;
     display: inline-block;
     margin: 0px;

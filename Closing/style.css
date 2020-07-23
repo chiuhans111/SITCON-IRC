@@ -96,7 +96,7 @@ section {
 .staff {
     padding: 200px 0px 40px;
     margin: 40px;
-    border-radius: 20px;
+    border-radius: 10px;
     /* background-color: rgba(255, 255, 255, 0.7); */
 }
 
@@ -154,7 +154,7 @@ section {
     margin-top: 10px;
     position: relative;
     display: inline-block;
-    font-size: 28px;
+    font-size: 20px;
     left: 50%;
     white-space: nowrap;
     transform: translate(-50%, 0);

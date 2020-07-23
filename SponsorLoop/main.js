@@ -1,3 +1,4 @@
+
 function get(url) {
     let xhr = new XMLHttpRequest()
     xhr.open('get', url)
@@ -14,6 +15,7 @@ var app = new Vue({
     el: '#app',
     data: {
         sponsors: [],
+        groups: []
     },
     methods: {
         level2name(level) {
@@ -22,7 +24,10 @@ var app = new Vue({
                 'co-holder': "共同主辦",
                 'co-organizer': '協辦單位',
                 'level-1': '深耕級合作夥伴',
-                'level-2': '前瞻級合作夥伴'
+                'level-2': '前瞻級合作夥伴',
+                'level-3': '新芽級合作夥伴',
+                'thank': '特別感謝',
+                'media': '媒體夥伴', 
             }[level]
         }
     }
@@ -30,19 +35,28 @@ var app = new Vue({
 
 
 
-get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/sponsor.json')
+get('https://sitcon.org/2020/json/sponsor.json')
     .then(data => {
         var sponsors = JSON.parse(data)
-
+        var groups = {}
         // 標記每種類別的贊助中的第一位 firstInClass = true
         var lastClass = null
         sponsors.map(x => {
             if (x.level != lastClass) x.firstInClass = true
             else x.firstInClass = false
             lastClass = x.level
+
+            if (groups[x.level] == null) {
+                groups[x.level] = {
+                    level: x.level,
+                    sponsors: []
+                }
+            }
+            groups[x.level].sponsors.push(x)
         })
 
         app.$data.sponsors = sponsors
+        app.$data.groups = Object.keys(groups).map(x => groups[x]).filter(x=>x.sponsors.length>0)
 
         setTimeout(() => {
             app.$destroy()
@@ -51,8 +65,8 @@ get('https://raw.githubusercontent.com/sitcon-tw/2019/master/static/json/sponsor
         }, 0)
     })
 
-var max_pixel_per_second = 150;
-var pixel_per_second = 0;
+var max_pixel_per_second = 100
+var pixel_per_second = 0
 var container = document.querySelector('.container')
 var now, past = null
 var scrollTop = 0
@@ -75,7 +89,7 @@ function setup() {
             if (images.every(x => x.done)) {
                 setTimeout(() => {
                     loaded()
-                }, 0);
+                }, 0)
             }
         })
     })

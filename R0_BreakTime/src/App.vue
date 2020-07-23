@@ -3,7 +3,7 @@
     <div class="main">
       <div class="top"></div>
       <div class="middle">
-        <VideoPlayer></VideoPlayer>
+        <!-- <VideoPlayer></VideoPlayer> -->
       </div>
       <div class="bottom"></div>
     </div>
@@ -15,10 +15,13 @@
 
 <script>
 import Side from "./components/Side";
-import VideoPlayer from "./components/VideoPlayer"
+// import VideoPlayer from "./components/VideoPlayer"
 export default {
   name: "App",
-  components: { Side, VideoPlayer }
+  components: {
+    Side,
+    // VideoPlayer,
+  },
 };
 </script>
 
@@ -46,7 +49,7 @@ body {
   width: 1600/1920 * 100%;
   height: 100%;
 }
-.side{
+.side {
   width: 1920-1600px;
   flex-grow: 1;
   flex-shrink: 0;

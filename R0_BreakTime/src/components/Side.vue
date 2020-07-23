@@ -21,10 +21,11 @@
               }"></div>
           </div>
         </template>
+
         <template v-else>
           <div class="left">
             <p>{{nextSession.info.zh.title}}</p>
-            <span v-for="(p,i) in nextSession.info.speakers" :key="'speak-'+i">{{p.zh.name}}</span>
+            <!-- <span v-for="(p,i) in nextSession.info.speakers" :key="'speak-'+i">{{p.zh.name}}</span> -->
           </div>
           <div class="right">
             <p>
@@ -37,13 +38,13 @@
       </div>
       <div class="side_main_content" v-if="i==0" :key="'sessions-content-'+i">
         <h1>{{nextSession.info.zh.title}}</h1>
-        <p v-for="(c,i) in nextSession.info.description" :key="'desc-'+i">{{c}}</p>
+        <!-- <p v-for="(c,i) in nextSession.info.description" :key="'desc-'+i">{{c}}</p> -->
         <div v-for="(p,i) in nextSession.info.speakers" :key="'speak-'+i">
           <h2>
-            <span style="font-weight:100">About</span>
+            <!-- <span style="font-weight:100">About</span> -->
             {{p.zh.name}}
           </h2>
-          <p v-for="(c,i) in p.zh.bio" :key="'bio-'+i">{{c}}</p>
+          <!-- <p v-for="(c,i) in p.zh.bio" :key="'bio-'+i">{{c}}</p> -->
         </div>
       </div>
     </template>
@@ -54,7 +55,7 @@
 import session from "../assets/json/session.json";
 var t = 0;
 function now() {
-  t += 1000;
+  t += 10000;
   return new Date("2020-03-28T08:00:00+08:00").getTime() + t;
 }
 
@@ -105,7 +106,7 @@ function nextSession() {
 
       return session.start + bufferTime > now();
     })
-    .slice(0, 5)
+    .slice(0, 10)
     .map(session => {
       return {
         info: session,
@@ -175,7 +176,9 @@ hr {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   border-bottom: solid 1px gray;
+
   overflow: hidden;
   flex-shrink: 0;
   font-size: 16px;
@@ -187,7 +190,10 @@ hr {
   &.first {
     color: white;
     font-size: 18px;
-    border-bottom: solid 1px white;
+
+    // border-bottom: solid 1px white;
+    border-bottom: none;
+
     font-weight: bold;
   }
 
@@ -224,7 +230,7 @@ hr {
 }
 
 .side_main_content {
-  padding: 10px 20px;
+  padding: 10px 20px 20px;
   flex-grow: 1;
   p {
     font-weight: 100;

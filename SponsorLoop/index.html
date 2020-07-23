@@ -8,8 +8,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <script src="./vue.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:400,900"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" href="./loading.css">
+
 </head>
 
 <body>
@@ -25,33 +30,42 @@
                 </div>
             </div>
             <div class="group" v-for="x in 3">
-                <template v-for="(sponsor, i) in sponsors"
-                    v-if="level2name(sponsor.level)!=null">
-                    <div v-if="sponsor.firstInClass"
-                        class='tag'>
+
+                <template v-for="(group, gi) in groups">
+                    <div class='tag'>
                         <div class="anchor">
-                            <img class="tag-img"
-                                :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
-                                alt="">
+                            <!-- <img class="tag-img"
+                    :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
+                    alt=""> -->
                         </div>
                         <div class="text"
-                            :id="sponsor.level">
-                            <img class="tag-img"
-                                :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
-                                alt="">
-                            <!-- {{level2name(sponsor.level)}} -->
+                            :id="group.level">
+                            <!-- <img class="tag-img"
+                    :src="'https://sitcon.org/2019/static/img/'+sponsor.level+'.svg'"
+                    alt=""> -->
+                            <h1>
+                                {{level2name(group.level)}}
+                            </h1>
                         </div>
                     </div>
-                    <div class="sponser">
+                    <div class="sgroup">
+                        <template
+                            v-for="(sponsor, i) in group.sponsors"
+                            v-if="level2name(sponsor.level)!=null">
 
-                        <img :src="'https://sitcon.org/2019/static/img/sponsor/'+sponsor.image"
-                            alt="">
-                    </div>
+                            <div class="sponser">
 
-                    <!-- <span>{{sponsor.name}}</span>
+                                <img :src="'https://sitcon.org/2020/img/sponsors/'+sponsor.image"
+                                    alt="">
+                            </div>
+
+                            <!-- <span>{{sponsor.name}}</span>
                     <span>{{sponsor.description}}</span> -->
+                        </template>
+                    </div>
                 </template>
             </div>
+
         </div>
     </div>
 </body>

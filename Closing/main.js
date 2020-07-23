@@ -81,6 +81,7 @@ var app = new Vue({
                 'level-2': '前瞻級合作夥伴',
                 'level-3': '新芽級合作夥伴',
                 'thank': '特別感謝',
+                'media': '媒體夥伴',
 
             }[level]
         }

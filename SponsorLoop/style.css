@@ -4,10 +4,11 @@ body,
     height: 100%;
     width: 100%;
     margin: 0;
+    font-family: "Noto Sans TC", sans-serif;
 }
 
 .container {
-    margin: 0px 8px;
+    margin: 0px 10px;
     height: 100%;
     overflow: hidden;
 }
@@ -16,8 +17,19 @@ body,
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
 }
 
+.sgroup {
+    width: 100%;
+    margin-left: 60px;
+    margin-top: -200px;;
+    border-radius: 2rem;
+    border: solid 5px black;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 .overlay {
     z-index: 99;
     width: 100%;
@@ -40,7 +52,7 @@ body,
     width: 33.33%;
     min-width: 300px;
     max-width: 400px;
-    padding: 40px;
+    padding: 20px;
     box-sizing: border-box;
 }
 
@@ -51,12 +63,16 @@ body,
 /* TAG */
 
 .tag {
+    display: block;
     position: relative;
     width: 100%;
     /* margin: 100px 0px 20px; */
-    padding: 128px 0px 64px;
+    /* padding: 32px 0px 32px; */
     display: flex;
+    height: 300px;
+
 }
+
 
 .anchor {
     /* position: relative */
@@ -65,16 +81,21 @@ body,
 
 .anchor,
 .tag .text {
-    border-top: solid 2px gray;
+    /* border-top: solid 2px gray; */
     width: 100%;
-    height: 100px;
     /* background-color: gray; */
     z-index: 9;
+
+    writing-mode: vertical-lr;
+    white-space: nowrap;
 }
 
 .text {
+    height: 240px;
+
     position: fixed;
-    top: 0;
+    top: 40px;
+    left: -6px;
 }
 
 .tag-img {

@@ -14,7 +14,7 @@ let keyframes = [
     "Coordinator",
     "Administration",
     "Agenda",
-    "CREW",
+    "service",
     "FINANCE",
     "Marketing",
     "editor",

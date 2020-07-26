@@ -54,7 +54,7 @@
                 <div v-for="speaker in speakers"
                     class="speaker">
                     <img :src="speaker.avatar"
-                        class="avatar" alt="">
+                        class="avatar"  @load="loaded(speaker)" alt="">
                     <h3> {{speaker.name}} </h3>
                     <!-- <p v-html="speaker.bio"> -->
                     </p>
@@ -68,13 +68,6 @@
 <script src="./main.js"></script>
 <script>
 
-    setTimeout(() => {
-
-        pup_render(1).then(function () {
-            pup_end()
-        })
-
-    }, 50);
 </script>
 
 </html>

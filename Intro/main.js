@@ -20,7 +20,37 @@ function TimeProcess(date) {
     return `${h}:${m}`
 }
 
+function md2html(md) {
+    var lines = md.split('\n').filter(x => x.trim().length > 0)
+    return lines.map(x => {
+        var match_header = x.match(/^(#+)\s(.*)$/)
+        console.log(match_header)
+        if (match_header) {
+            var header_num = match_header[1].length
+            var header_content = match_header[2]
+            return `<h${header_num}>${header_content}</h${header_num}>`
+        }
 
+        return `<p>${x}</p>`
+    }).join('')
+}
+
+var noWrapList = [
+    "大型資訊", "鯉魚教の教主崇拜分析", "有愛就沒把專案做出來，對吧", "這次換駭客當鬼來抓你了", "從零開始打造多維", "是不是吃錯藥", "指令式編程程式碼",
+    "以資訊專長跳脫傳統升學體制", "聚集在一起吧"
+]
+
+function FixTitle(title) {
+    noWrapList.map(word => {
+        title = title.replace(
+            new RegExp(word, 'g'),
+            [...word].join('\uFEFF')
+        )
+    })
+    return title
+}
+
+var puppeteer
 
 
 var app = new Vue({
@@ -34,97 +64,123 @@ var app = new Vue({
         start: "",
         end: "",
         type: "",
-        tags: []
+        tags: [],
+        data: {},
+        i: 0
 
+    },
+    methods: {
+        set(i) {
+            var data = this.data
+            i = i % data.sessions.length
+            var session = data.sessions[i]
+
+            this.session = session
+
+            console.log("current session", session)
+
+            this.title = FixTitle(session.zh.title)
+
+
+
+
+
+            this.desc = md2html(session.zh.description)
+
+
+            var speakers = session.speakers
+
+            var speakers_table = {}
+            data.speakers.map(speaker => {
+                speakers_table[speaker.id] = speaker
+            })
+
+            this.speakers = speakers.map(speaker_id => {
+                var speaker = speakers_table[speaker_id]
+                var name = speaker.zh.name
+                var bio = md2html(speaker.zh.bio)
+                var avatar = speaker.avatar
+
+                if(avatar.match('stone')){
+                    avatar = 'https://sitcon.org/2020/img/sitcon-logo.png'
+                }
+
+                return {
+                    name, bio, avatar, loaded: false
+                }
+            })
+
+            this.start = TimeProcess(session.start)
+            this.end = TimeProcess(session.end)
+
+            var types_table = {}
+            data.session_types.map(type => {
+                types_table[type.id] = type
+            })
+
+            this.type = types_table[session.type].zh.name
+
+
+            var tags_table = {}
+            data.tags.map(tag => {
+                tags_table[tag.id] = tag
+            })
+
+
+            this.tags = session.tags.map(x => tags_table[x].zh.name)
+
+
+
+            this.i = i
+            this.checkLoad()
+        },
+        loaded(speaker) {
+            console.log('load')
+            speaker.loaded = true
+
+            this.checkLoad()
+        },
+        checkLoad() {
+            var i = this.i
+
+            if (this.speakers.every(x => x.loaded)) {
+                var me = this
+                setTimeout(() => {
+
+                    if (puppeteer) {
+                        var room = me.session.room
+                        var start = me.start.replace(":", "")
+                        var end = me.end.replace(":", "")
+
+                        pup_render(room + "_" + start + "_" + end + "_" + me.session.zh.title.replace(/[？?\n\s]/g, '_')).then(function () {
+                            setTimeout(() => {
+                                me.set(i + 1)
+                            }, 10)
+                        })
+                    }
+                    else {
+                        setTimeout(() => {
+                            this.set(i + 1)
+                        }, 100)
+                    }
+
+
+                }, 100)
+            }
+        }
     }
 })
 
 
-function md2html(md) {
-    var lines = md.split('\n').filter(x => x.trim().length > 0)
-    return lines.map(x => {
-        var match_header = x.match(/^(#+)\s(.*)$/)
-        console.log(match_header)
-        if (match_header) {
-            var header_num = match_header[1].length
-            var header_content = match_header[2]
-            return `<h${header_num}>${header_content}</h${header_num}>`
-        }
 
-        return `${x}`
-    }).join('</br>')
-}
 
 get('https://sitcon.org/2020/json/session.json').then(function (data) {
 
     console.log(data)
 
-    app.$data.session = data
+    app.$data.data = data
 
-
-    function set(i) {
-        i = i % data.sessions.length
-        var session = data.sessions[i]
-
-
-
-        console.log("current session", session)
-
-        app.$data.title = session.zh.title
-        app.$data.desc = md2html(session.zh.description)
-
-
-        var speakers = session.speakers
-
-        var speakers_table = {}
-        data.speakers.map(speaker => {
-            speakers_table[speaker.id] = speaker
-        })
-
-        app.$data.speakers = speakers.map(speaker_id => {
-            var speaker = speakers_table[speaker_id]
-            var name = speaker.zh.name
-            var bio = md2html(speaker.zh.bio)
-            var avatar = speaker.avatar
-
-            return {
-                name, bio, avatar
-            }
-        })
-
-        app.$data.start = TimeProcess(session.start)
-        app.$data.end = TimeProcess(session.end)
-
-        var types_table = {}
-        data.session_types.map(type => {
-            types_table[type.id] = type
-        })
-
-        app.$data.type = types_table[session.type].zh.name
-
-
-        var tags_table = {}
-        data.tags.map(tag => {
-            tags_table[tag.id] = tag
-        })
-
-
-        app.$data.tags = session.tags.map(x => tags_table[x].zh.name)
-
-        room = session.room
-        start = app.$data.start.replace(":","")
-        end = app.$data.end.replace(":","")
-
-        setTimeout(() => {
-            pup_render(room+"_"+start+"_"+end+"_"+app.$data.title.replace(/[？?\n\s]/g,'_')).then(function () {
-                setTimeout(() => {
-                    set(i + 1)
-                }, 100)
-            })
-        }, 100)
-    }
-
-    set(0)
+    app.set(0)
 
 
 })

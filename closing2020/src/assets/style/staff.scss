@@ -1,0 +1,23 @@
+.staff {
+    &-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    &-member {
+        margin: 10px;
+        text-align: center;
+
+        &_img {
+            margin: auto;
+            width: 100px;
+            height: 100px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 10px;
+        }
+
+    }
+}

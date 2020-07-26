@@ -1,4 +1,4 @@
-function Brick(x, y, w, h, c = 50) {
+function Brick(x, y, w, h, c = 128) {
     this.x = x
     this.y = y
     this.w = w
@@ -26,7 +26,7 @@ function Brick(x, y, w, h, c = 50) {
 function drawGrid(canvas, ctx, grid) {
     for (var brick of grid) {
         ctx.fillStyle = `rgb(${brick.c},${brick.c},${brick.c})`
-        ctx.fillRect(brick.x, brick.y, brick.w, brick.h)
+        ctx.fillRect(brick.x, brick.y, brick.w+0.5, brick.h+0.5)
     }
 }
 
@@ -47,17 +47,19 @@ function buildTransition(brick1, brick2) {
     var dh = brick1.h - brick2.h
     var dc = brick1.c - brick2.c
 
-    var cost = dx ** 2 + dy ** 2 + dw ** 2 + dh ** 2 + dc ** 2  - (brick1.x + brick2.x)*1
+    var cost = Math.sqrt(dx ** 2 * 20 + dy ** 2 + (dw ** 2 + dh ** 2 + dc ** 2) * 0.1)
 
-    if (dx != 0 && dy != 0) cost *= 5
+    cost -= (-brick1.x + brick2.x - brick1.y + brick2.y) * 0.1
 
-    if (cost <= 0.01) cost = 10000
+    cost += Math.sin(brick1.x * 20.20) * Math.sin(brick2.y * 20.20)*0.1
+    cost += Math.sin(brick1.y * 20.20) * Math.sin(brick2.x * 20.20)*0.1
+
     return [brick1, brick2, cost]
 }
 
 
-function lerp(a, b, t) {
-    let f = (t < 0.5) ? ((t / 0.5) ** 4) * 0.5 : 1 - (((1 - t) / 0.5) ** 4) * 0.5
+function lerp(a, b, t, power = 4) {
+    let f = (t < 0.5) ? ((t / 0.5) ** power) * 0.5 : 1 - (((1 - t) / 0.5) ** power) * 0.5
 
     return a * (1 - f) + b * f
 }
@@ -85,7 +87,7 @@ function lerpGrid(grid1, grid2) {
 
     transitionCandidates = transitionCandidates.sort((a, b) => {
         return a[2] - b[2]
-    }).slice(0, transitionCandidates.length / 2)
+    }).slice(0, transitionCandidates.length*0.5)
 
     /**@type {Array<Brick>} */
     let assignedBricks = []
@@ -104,7 +106,7 @@ function lerpGrid(grid1, grid2) {
     for (let brick of grid1) {
         if (assignedBricks.includes(brick)) continue
         assignedBricks.push(brick)
-        let targetBrick = new Brick(brick.x + brick.w / 2, brick.y + brick.h / 2, 0, 0, brick.c)
+        let targetBrick = new Brick(brick.x + brick.w / 2, -window.innerHeight*0.5, 0, 0, brick.c)
         let transition = buildTransition(brick, targetBrick)
         transitions.unshift(transition)
     }
@@ -112,11 +114,14 @@ function lerpGrid(grid1, grid2) {
     for (let brick of grid2) {
         if (assignedBricks.includes(brick)) continue
         assignedBricks.push(brick)
-        let targetBrick = new Brick(brick.x + brick.w / 2, brick.y + brick.h / 2, 0, 0, brick.c)
+        let targetBrick = new Brick(brick.x + brick.w / 2, window.innerHeight*0.5, 0, 0, brick.c)
         let transition = buildTransition(targetBrick, brick)
         transitions.push(transition)
     }
 
+    transitions = transitions.sort((a, b) => {
+        return a[2] - b[2]
+    })
 
     /** 
      * @param {number} t
@@ -125,10 +130,13 @@ function lerpGrid(grid1, grid2) {
     function lerpTransition(t) {
         let grid = []
         let i = 0
-        let offset = 0.75
-        for (let transition of transitions) {
 
-            let f = Math.max(0, Math.min(1, t / offset - i / transitions.length * (1-offset)))
+        for (let transition of transitions) {
+            let offset = Math.abs(transition[2] / 200 % 1) * 0.1 + 0.15
+
+            let k = (i / transitions.length*20.20)%1**0.25;
+
+            let f = Math.max(0, Math.min(1, t / offset - k * (1 - offset)))
 
             let x = lerp(transition[0].x, transition[1].x, f)
             let y = lerp(transition[0].y, transition[1].y, f)

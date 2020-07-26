@@ -1,15 +1,23 @@
 .staff {
     &-group {
+        border-radius: 20px;
+        padding: 20px;
         display: flex;
         flex-wrap: wrap;
+        // background: rgba(255,255,255,0.1);
+        // backdrop-filter: blur(10px);
         justify-content: center;
     }
 
     &-member {
         margin: 10px;
+        width: 150px;
         text-align: center;
 
+        
         &_img {
+            background: #AAA;
+            box-shadow: black 1px 5px 20px;
             margin: auto;
             width: 100px;
             height: 100px;
@@ -20,4 +28,5 @@
         }
 
     }
+
 }

@@ -1,17 +1,26 @@
-
 * {
     font-family: "Noto Sans TC", sans-serif;
 }
 
-h1{
+h1 {
     font-size: 50px;
 }
 
-
-h2{
+h2 {
     font-size: 30px;
 }
 
-h3{
+h3 {
     font-size: 18px;
+}
+
+p {
+    max-width: 1000px;
+    margin: 20px auto;
+    font-size: 24px;
+}
+
+
+hr{
+    width: 50%;
 }

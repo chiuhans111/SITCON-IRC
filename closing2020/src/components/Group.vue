@@ -1,7 +1,8 @@
 <template>
   <div>
     <h2>{{info.name}}</h2>
-    <p>{{info.description}}</p>
+    <hr>
+    <!-- <p>{{info.description}}</p> -->
     <div class="staff-group">
       <Member v-for="(member, i) in info.members" :key="'member-'+i" :info="member" @load="load(i)"></Member>
     </div>

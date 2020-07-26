@@ -1,0 +1,37 @@
+.sponsor {
+    &-group {
+        border-radius: 20px;
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        // background: rgba(255,255,255,0.1);
+        // backdrop-filter: blur(10px);
+        justify-content: center;
+
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+
+        border: solid 5px black;
+
+        padding: 10px 0px 20px;
+
+        &_sponsor {
+            margin: 20px;
+
+            color: black;
+
+            &-img {
+                margin: 20px 10px 0px;
+                width: 400px;
+                height: 220px;
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+
+            h3 {
+                color: #444;
+            }
+        }
+    }
+}

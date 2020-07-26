@@ -1,10 +1,13 @@
 <template>
   <div id="app">
-    <Background class="background" :t="t"></Background>
-    <div class="content">
+    <Background class="background" :t="t" :p="p"></Background>
+    <div class="content" ref="content">
       <div class="big-gap" ref="anchor-0"></div>
+      <h1>#CREDITS</h1>
+
       <div class="big-gap" ref="anchor-1"></div>
       <h1>講者</h1>
+      <hr />
       <p>按照字母及筆畫順序</p>
       <div class="staff-group">
         <Speaker
@@ -14,16 +17,55 @@
           @load="load('speaker', data.speakers.length)"
         ></Speaker>
       </div>
-      <div class="big-gap" ref="anchor-2"></div>
+      <div class="small-gap" ref="anchor-2"></div>
 
+      <div class="big-gap" ref="anchor-3"></div>
 
       <h1>工作人員</h1>
       <div class="staff">
         <template v-for="(group, i) in data.staff">
-          <div :ref="'anchor-'+(i+3)" :key="'group-anchor-'+i" class="small-gap"></div>
+          <div :ref="'anchor-'+(i+4)" :key="'group-anchor-'+i" class="small-gap"></div>
           <Group :key="'group-'+i" :info="group" @load="load('staff', data.staff.length)"></Group>
         </template>
       </div>
+
+      <div class="big-gap" ref="anchor-16"></div>
+      <div class="small-gap" ref="anchor-17"></div>
+
+      <div class="sponsor">
+        <template v-for="(sponsor, i) in data.sponsor">
+          <div :ref="'anchor-'+(i+17)" :key="'sponsor-anchor-'+i" class="small-gap"></div>
+          <Sponsor :key="'sponsor-'+i" :info="sponsor" @load="load('sponsor', data.sponsor.length)"></Sponsor>
+        </template>
+      </div>
+
+      <div class="big-gap" ref="anchor-25"></div>
+      <div class="small-gap" ref="anchor-26"></div>
+      <h1>特別感謝</h1>
+      <p>很多很多感謝對象</p>
+      <p>很多很多感謝對象</p>
+      <p>很多很多感謝對象</p>
+      <p>很多很多感謝對象</p>
+      <p>很多很多感謝對象</p>
+      <div class="big-gap" ref="anchor-27"></div>
+      <div class="big-gap" ref="anchor-28"></div>
+      <div class="big-gap" ref="anchor-29"></div>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <h1>你以為還有東西嗎</h1>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <h1>已經結束了可以回家囉</h1>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <div class="big-gap"></div>
+      <h1>工作人員請到台前拍照喔</h1>
     </div>
   </div>
 </template>
@@ -32,6 +74,7 @@
 import data from "./loader";
 import Group from "./components/Group";
 import Speaker from "./components/Speaker";
+import Sponsor from "./components/Sponsor";
 import Background from "./components/Background";
 
 export default {
@@ -40,12 +83,14 @@ export default {
     Group,
     Speaker,
     Background,
+    Sponsor,
   },
   data() {
     return {
       data,
       remain_loading: {},
       t: 0,
+      p: 0,
     };
   },
 
@@ -68,11 +113,20 @@ export default {
 
       if (all_loaded) {
         console.log("all loaded");
+        setTimeout(() => {
+          window.scrollTo(0,0);
+
+          window.setInterval(function () {
+            scrollBy(0, 1.5);
+          }, 16);
+        }, 10);
       }
     },
 
     update() {
       let t = 0;
+
+      let anchors = [];
 
       for (let i in this.$refs) {
         if (i.startsWith("anchor-")) {
@@ -81,16 +135,27 @@ export default {
           if (el.length > 0) el = el[0];
           // console.log(i, el)
           let rect = el.getBoundingClientRect();
-          let begin = window.innerHeight/2;
-          let end = window.innerHeight/2 - (rect.height + 1);
+          let begin = window.innerHeight / 2;
+          let end = window.innerHeight / 2 - rect.height * 1.5;
+
+          if (begin - end <= 0) end = begin - 1;
 
           let id = parseInt(i.substr(7));
           let f = Math.max(0, Math.min(1, (rect.y - begin) / (end - begin)));
-          t = t * (1 - f) + f * id;
+          anchors.push([id, f]);
         }
       }
 
+      anchors.sort((a, b) => a[0] - b[0]);
+      // console.log(anchors);
+      anchors.map((x) => {
+        let id = x[0];
+        let f = x[1];
+        t = t * (1 - f) + f * id;
+      });
+
       this.t = t;
+      this.p = this.$refs.content.getBoundingClientRect().y;
     },
   },
   mounted() {

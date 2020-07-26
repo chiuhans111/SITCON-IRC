@@ -187,6 +187,13 @@ const raw_fonts = `
  # #
 #####
  # #
+
+:-
+
+
+#####
+
+
 `
 
 import GridLogic from './GridLogic'
@@ -198,18 +205,20 @@ var fonts = {}
 
 const w = 40
 const h = 40
+let y = 0
 
 raw_fonts.split('\n').map(line => {
-    if (line.length == 0) return
+    // if (line.length == 0) return
     if (line.charAt(0) == ':') {
         currentChar = line.charAt(1)
         fonts[currentChar] = []
+        y = 0
         return
     }
     /**@type {Array<Brick>} */
     let grid = fonts[currentChar]
     if (grid == null) return
-    let y = grid.reduce((b, a) => Math.max(a.y + a.h, b), 0)
+    // let y = grid.reduce((b, a) => Math.max(a.y + a.h, b), 0)
     let x = 0
     for (let char of line) {
         if (char !== ' ') {
@@ -217,8 +226,8 @@ raw_fonts.split('\n').map(line => {
         }
         x += w
     }
+    y += h
 })
-
 
 /**
  * 
@@ -227,24 +236,28 @@ raw_fonts.split('\n').map(line => {
 function buildString(str) {
     str = str.toUpperCase()
     let grid = []
-    for (let char of str) {
-        if (fonts[char]) {
-            let x = grid.reduce((b, a) => Math.max(a.x + a.w, b), 0) + w
+    let x = 0
 
+    for (let char of str) {
+        if (char == ' ') {
+            x += w * 3
+        }
+        else if (fonts[char]) {
             grid.push(...fonts[char].map(brick => {
                 return brick.copy(x)
             }))
+            x = grid.reduce((b, a) => Math.max(a.x + a.w, b), 0) + w
         }
-        console.log(grid)
+        // console.log(grid)
     }
 
     let fw = grid.reduce((b, a) => Math.max(a.x + a.w, b), 0)
-    let fh = grid.reduce((b, a) => Math.max(a.y + a.h, b), 0) 
+    let fh = grid.reduce((b, a) => Math.max(a.y + a.h, b), 0)
 
-    console.log(fw, fh)
-    
+    // console.log(fw, fh)
 
-    let s = 1000/fw
+
+    let s = 1000 / fw
 
     grid.map(brick => {
         brick.x -= fw / 2

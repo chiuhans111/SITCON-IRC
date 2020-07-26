@@ -67,7 +67,7 @@ function getGrid(t) {
  * @param {CanvasRenderingContext2D} ctx 
  */
 function update(canvas, ctx, t, p, b) {
-    var drawer = new GridLogic.GridDrawer(canvas, ctx)
+    var painter = new GridLogic.GridPainter(canvas, ctx)
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
 
@@ -136,7 +136,7 @@ function update(canvas, ctx, t, p, b) {
     ctx.transform(1, 0, SKEW, 1, canvas.width / 2, canvas.height * 0.45)
 
 
-    drawer.draw(getGrid(t))
+    painter.draw(getGrid(t))
     ctx.restore()
 }
 

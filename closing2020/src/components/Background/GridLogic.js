@@ -31,7 +31,7 @@ function drawGrid(canvas, ctx, grid) {
 }
 
 
-function GridDrawer(canvas, ctx) {
+function GridPainter(canvas, ctx) {
     this.canvas = canvas
     this.ctx = ctx
     this.draw = function (grid) {
@@ -156,7 +156,7 @@ function lerpGrid(grid1, grid2) {
 
 
 export default {
-    Brick, GridDrawer, lerp: lerpGrid
+    Brick, GridPainter, lerp: lerpGrid
 }
 
 

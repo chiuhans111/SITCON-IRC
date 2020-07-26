@@ -4,6 +4,8 @@ import App from './App.vue'
 import './assets/style/index.scss'
 Vue.config.productionTip = false
 
+window.puppeteer = false
+
 new Vue({
   render: h => h(App),
 }).$mount('#app')

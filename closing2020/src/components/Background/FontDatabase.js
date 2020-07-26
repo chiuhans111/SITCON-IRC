@@ -257,7 +257,7 @@ function buildString(str) {
     // console.log(fw, fh)
 
 
-    let s = 1000 / fw
+    let s = 1200 / fw
 
     grid.map(brick => {
         brick.x -= fw / 2

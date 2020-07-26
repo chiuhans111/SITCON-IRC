@@ -8,7 +8,7 @@
 <script>
 import canvas from "./Background/Canvas";
 export default {
-  props: ["t", "p"],
+  props: ["t", "p", "b"],
 
   data() {
     return {
@@ -40,7 +40,7 @@ export default {
       requestAnimationFrame(this.loop);
     },
     update() {
-      canvas.update(this.canvas, this.ctx, this.t, this.p);
+      canvas.update(this.canvas, this.ctx, this.t, this.p, this.b);
     },
     resize() {
       this.canvas.width = window.innerWidth;

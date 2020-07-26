@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Background class="background" :t="t" :p="p"></Background>
+    <Background class="background" :t="t" :p="p" :b="b"></Background>
     <div class="content" ref="content">
       <div class="big-gap" ref="anchor-0"></div>
       <h1>#CREDITS</h1>
@@ -52,20 +52,6 @@
       <div class="big-gap" ref="anchor-29"></div>
       <div class="big-gap"></div>
       <div class="big-gap"></div>
-      <div class="big-gap"></div>
-      <div class="big-gap"></div>
-      <div class="big-gap"></div>
-      <div class="big-gap"></div>
-      <div class="big-gap"></div>
-      <h1>你以為還有東西嗎</h1>
-      <div class="big-gap"></div>
-      <div class="big-gap"></div>
-      <div class="big-gap"></div>
-      <h1>已經結束了可以回家囉</h1>
-      <div class="big-gap"></div>
-      <div class="big-gap"></div>
-      <div class="big-gap"></div>
-      <h1>工作人員請到台前拍照喔</h1>
     </div>
   </div>
 </template>
@@ -76,6 +62,10 @@ import Group from "./components/Group";
 import Speaker from "./components/Speaker";
 import Sponsor from "./components/Sponsor";
 import Background from "./components/Background";
+
+const BPM = 115
+const FPS = 30
+const SCROLL_SPEED = 6;
 
 export default {
   name: "App",
@@ -89,8 +79,10 @@ export default {
     return {
       data,
       remain_loading: {},
-      t: 0,
-      p: 0,
+      t: 0, // text animation hint
+      p: 0, // page scroll pixel
+      b: 0, // beats
+      interval: 0,
     };
   },
 
@@ -114,11 +106,15 @@ export default {
       if (all_loaded) {
         console.log("all loaded");
         setTimeout(() => {
-          window.scrollTo(0,0);
+          window.scrollTo(0, 0);
 
-          window.setInterval(function () {
-            scrollBy(0, 1.5);
-          }, 16);
+          if (window.puppeteer) {
+            this.puppeteerUpdate();
+          } else {
+            this.interval = window.setInterval(function () {
+              scrollBy(0, SCROLL_SPEED);
+            }, 1000/FPS);
+          }
         }, 10);
       }
     },
@@ -155,11 +151,31 @@ export default {
       });
 
       this.t = t;
-      this.p = this.$refs.content.getBoundingClientRect().y;
+      this.p = -window.pageYOffset;
+      this.b = window.pageYOffset / SCROLL_SPEED / FPS * BPM / 60;
+    },
+    puppeteerUpdate() {
+      let me = this;
+      scrollBy(0, SCROLL_SPEED);
+      if (
+        window.pageYOffset >=
+        document.body.scrollHeight - window.innerHeight - 1
+      )
+        window.pup_end();
+      this.update();
+      setTimeout(() => {
+        window.pup_render().then(function () {
+          me.puppeteerUpdate();
+        });
+      }, 0);
     },
   },
   mounted() {
     window.addEventListener("scroll", this.update);
   },
+  destroyed(){
+    window.removeEventListener("scroll", this.update);
+    window.clearInterval(this.interval)
+  }
 };
 </script>

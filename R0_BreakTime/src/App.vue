@@ -1,19 +1,21 @@
 <template>
   <div id="app">
     <div class="main">
-      <div class="top"></div>
+      <div class="top">{{currentTime}}</div>
       <div class="middle">
         <!-- <VideoPlayer></VideoPlayer> -->
       </div>
       <div class="bottom"></div>
     </div>
     <div class="side">
-      <Side></Side>
+      <Side @update="update"></Side>
     </div>
   </div>
 </template>
 
 <script>
+import sessiondata from "./assets/json/session.js";
+
 import Side from "./components/Side";
 // import VideoPlayer from "./components/VideoPlayer"
 export default {
@@ -21,6 +23,16 @@ export default {
   components: {
     Side,
     // VideoPlayer,
+  },
+  data() {
+    return {
+      currentTime: "",
+    };
+  },
+  methods: {
+    update() {
+      this.currentTime = sessiondata.TimeProcess(new Date().getTime());
+    },
   },
 };
 </script>
@@ -58,7 +70,27 @@ body {
 .bottom {
   flex-shrink: 0;
   height: 90px;
-  background-color: white;
+}
+
+.top {
+  background-image: url("./assets/img/top.png");
+  background-size: cover;
+  background-position: left;
+  background-repeat: no-repeat;
+
+  color: white;
+  font-weight: 900;
+  font-size: 18px;
+  padding: 25px 40px;
+  box-sizing: border-box;
+
+  letter-spacing: 2.7px;
+}
+.bottom {
+  background-image: url("./assets/img/bottom.png");
+  background-size: cover;
+  background-position: left;
+  background-repeat: no-repeat;
 }
 .middle {
   position: relative;

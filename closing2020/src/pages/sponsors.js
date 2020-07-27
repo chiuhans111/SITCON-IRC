@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Sponsors from './Sponsors.vue'
 
-// import './assets/style/index.scss'
+import '../assets/style/pages/sponsors/index.scss'
 Vue.config.productionTip = false
 
 window.puppeteer = false

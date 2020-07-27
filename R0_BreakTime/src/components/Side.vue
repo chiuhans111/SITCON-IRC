@@ -52,51 +52,25 @@
 </template>
 
 <script>
-import session from "../assets/json/session.json";
+import sessiondata from "../assets/json/session.js";
+
+function rooms() {
+  return sessiondata.rooms || [{ sessions: [] }];
+}
+
+window.debug = false;
 var t = 0;
 function now() {
-  t += 10000;
-  return new Date("2020-03-28T08:00:00+08:00").getTime() + t;
+  if (window.debug) {
+    t += 10000;
+    return new Date("2020-03-28T08:00:00+08:00").getTime() + t;
+  }
+  return new Date().getTime();
 }
-
-function TimeProcess(date) {
-  let d = new Date(date);
-  let h = d.getHours().toString();
-  let m = d.getMinutes().toString();
-  if (h.length < 2) h = "0" + h;
-  if (m.length < 2) m = "0" + m;
-  return `${h}:${m}`;
-}
-session.speakers.map(x => {
-  x.zh.bio = x.zh.bio.split("\n");
-});
-
-var rooms = session.rooms.map(room => {
-  room.sessions = session.sessions
-    .filter(s => s.room == room.id)
-    .map(s => {
-      s.startTime = TimeProcess(s.start);
-      s.endTime = TimeProcess(s.end);
-      s.start = new Date(s.start).getTime();
-      s.end = new Date(s.end).getTime();
-      s.speakers = s.speakers
-        .map(p => {
-          return session.speakers.filter(x => x.id == p)[0];
-        })
-        .filter(x => x != null);
-
-      s.description = s.zh.description.split("\n");
-      return s;
-    })
-    .sort((a, b) => {
-      return a.start - b.start;
-    });
-  return room;
-});
 
 function nextSession() {
-  return rooms[0].sessions
-    .filter(session => {
+  return rooms()[0]
+    .sessions.filter((session) => {
       var buffer = true;
       if (session.zh.title == "休息時間") buffer = false;
       if (session.zh.title == "入場時間") buffer = false;
@@ -107,7 +81,7 @@ function nextSession() {
       return session.start + bufferTime > now();
     })
     .slice(0, 10)
-    .map(session => {
+    .map((session) => {
       return {
         info: session,
         percent:
@@ -116,7 +90,7 @@ function nextSession() {
             Math.min(1, (now() - session.start) / (5 * 60 * 1000)) + 1
           ) *
             100 +
-          "%"
+          "%",
       };
     });
 }
@@ -125,18 +99,19 @@ export default {
   data() {
     return {
       interval_id: null,
-      nextSessions: nextSession()
+      nextSessions: nextSession(),
     };
   },
   mounted() {
     var me = this;
     this.interval_id = setInterval(() => {
       me.nextSessions = nextSession();
+      me.$emit('update')
     }, 500);
   },
   destroyed() {
     clearInterval(this.interval_id);
-  }
+  },
 };
 </script>
 <style lang="scss">

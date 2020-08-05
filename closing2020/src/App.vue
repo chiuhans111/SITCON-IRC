@@ -42,11 +42,11 @@
       <div class="big-gap" ref="anchor-25"></div>
       <div class="small-gap" ref="anchor-26"></div>
       <h1>特別感謝</h1>
-      <p>很多很多感謝對象</p>
-      <p>很多很多感謝對象</p>
-      <p>很多很多感謝對象</p>
-      <p>很多很多感謝對象</p>
-      <p>很多很多感謝對象</p>
+      <div class="thanks">
+        <div class="thanks-item" v-for="(item,i) in thanks" :key="'thanks-'+i">
+          {{item}}
+        </div>
+      </div>
       <div class="big-gap" ref="anchor-27"></div>
       <div class="big-gap" ref="anchor-28"></div>
       <div class="big-gap" ref="anchor-29"></div>

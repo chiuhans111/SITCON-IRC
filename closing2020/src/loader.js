@@ -15,12 +15,25 @@ var data = {
     sponsor: {}
 }
 
+var thanks = [
+    "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明",
+    "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明",
+    "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明",
+    "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明",
+    "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明",
+    "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明",
+    "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明",
+    "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明", "王曉明",
+]
+
 
 Promise.all([
     get('https://sitcon.org/2020/json/staff.json'),
     get('https://sitcon.org/2020/json/session.json'),
-    get('https://sitcon.org/2020/json/sponsor.json')
-]).then(([staff, session, sponsor]) => {
+    get('https://sitcon.org/2020/json/sponsor.json'),
+    new Promise(done => done(thanks))
+
+]).then(([staff, session, sponsor, thanks]) => {
 
     data.staff = staff
     data.speakers = session.speakers.sort((a, b) => {
@@ -36,10 +49,13 @@ Promise.all([
             sponsorGroups[x.level] = []
         sponsorGroups[x.level].push(x)
     })
-    data.sponsor = Object.keys(sponsorGroups).map(key=>({
+    data.sponsor = Object.keys(sponsorGroups).map(key => ({
         level: key,
         sponsors: sponsorGroups[key]
     }))
+
+
+    data.thanks = thanks
 })
 
 

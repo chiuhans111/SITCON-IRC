@@ -57,15 +57,14 @@ import sessiondata from "../assets/json/session.js";
 function rooms() {
   return sessiondata.rooms || [{ sessions: [] }];
 }
-
-window.debug = false;
-var t = 0;
+window.timeoffset = 0;
 function now() {
-  if (window.debug) {
-    t += 10000;
-    return new Date("2020-03-28T08:00:00+08:00").getTime() + t;
-  }
-  return new Date().getTime();
+  return new Date().getTime() + window.timeoffset;
+}
+function normalizeTime(time) {
+  let start = new Date(time);
+  start.setHours(0, 0, 0, 0);
+  return time - start.getTime();
 }
 
 function nextSession() {
@@ -78,7 +77,7 @@ function nextSession() {
       if (session.zh.title == "換場") buffer = false;
       var bufferTime = buffer ? 5 * 60 * 1000 : 0;
 
-      return session.start + bufferTime > now();
+      return normalizeTime(session.start + bufferTime) > normalizeTime(now());
     })
     .slice(0, 10)
     .map((session) => {
@@ -106,7 +105,7 @@ export default {
     var me = this;
     this.interval_id = setInterval(() => {
       me.nextSessions = nextSession();
-      me.$emit('update')
+      me.$emit("update");
     }, 500);
   },
   destroyed() {

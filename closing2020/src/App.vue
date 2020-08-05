@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Background class="background" :t="t" :p="p" :b="b"></Background>
+    <img class="cover" src="../src/assets/img/define_16_9.png" alt />
     <div class="content" ref="content">
       <div class="big-gap" ref="anchor-0"></div>
       <h1>#CREDITS</h1>
@@ -63,8 +64,8 @@ import Speaker from "./components/Speaker";
 import Sponsor from "./components/Sponsor";
 import Background from "./components/Background";
 
-const BPM = 115
-const FPS = 30
+const BPM = 115;
+const FPS = 30;
 const SCROLL_SPEED = 6;
 
 export default {
@@ -113,7 +114,7 @@ export default {
           } else {
             this.interval = window.setInterval(function () {
               scrollBy(0, SCROLL_SPEED);
-            }, 1000/FPS);
+            }, 1000 / FPS);
           }
         }, 10);
       }
@@ -152,7 +153,7 @@ export default {
 
       this.t = t;
       this.p = -window.pageYOffset;
-      this.b = window.pageYOffset / SCROLL_SPEED / FPS * BPM / 60;
+      this.b = ((window.pageYOffset / SCROLL_SPEED / FPS) * BPM) / 60;
     },
     puppeteerUpdate() {
       let me = this;
@@ -173,9 +174,9 @@ export default {
   mounted() {
     window.addEventListener("scroll", this.update);
   },
-  destroyed(){
+  destroyed() {
     window.removeEventListener("scroll", this.update);
-    window.clearInterval(this.interval)
-  }
+    window.clearInterval(this.interval);
+  },
 };
 </script>

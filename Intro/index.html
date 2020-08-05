@@ -47,15 +47,15 @@
                     </template>
                 </div>
                 <h1>{{title}} </h1>
-                <p v-html="desc">
-                </p>
+                <!-- <p v-html="desc">
+                </p> -->
             </div>
             <div class="speakers">
                 <div v-for="speaker in speakers"
                     class="speaker">
                     <img :src="speaker.avatar"
                         class="avatar"  @load="loaded(speaker)" alt="">
-                    <h3> {{speaker.name}} </h3>
+                    <h2> {{speaker.name}} </h2>
                     <!-- <p v-html="speaker.bio"> -->
                     </p>
                 </div>

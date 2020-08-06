@@ -36,7 +36,8 @@ const cp = require('child_process');
     var terminate = false
 
 
-    await page.goto('http://localhost:8080/')
+    // await page.goto('http://localhost:8080/')
+    await page.goto(__dirname+'/dist/index.html')
 
     page.exposeFunction('pup_render', async frame => {
         console.log(frame)

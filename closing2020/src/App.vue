@@ -44,9 +44,7 @@
       <div class="small-gap" ref="anchor-26"></div>
       <h1>特別感謝</h1>
       <div class="thanks">
-        <div class="thanks-item" v-for="(item,i) in thanks" :key="'thanks-'+i">
-          {{item}}
-        </div>
+        <div class="thanks-item" v-for="(item,i) in data.thanks" :key="'thanks-'+i">{{item}}</div>
       </div>
       <div class="big-gap" ref="anchor-27"></div>
       <div class="big-gap" ref="anchor-28"></div>
@@ -66,7 +64,11 @@ import Background from "./components/Background";
 
 const BPM = 115;
 const FPS = 30;
-const SCROLL_SPEED = 6;
+let SCROLL_SPEED = 6;
+
+window.setScrollSpeed = function (speed) {
+  SCROLL_SPEED = speed;
+};
 
 export default {
   name: "App",

@@ -12,11 +12,15 @@ const fs = require('fs');
     })
     const page = await browser.newPage()
 
-    page.setViewport({
-        width: 1920,
-        height: 1080
-    })
+    // page.setViewport({
+    //     width: 1920,
+    //     height: 1080
+    // })
 
+    page.setViewport({
+        width: 1280,
+        height: 720
+    })
     // var ffmpeg = cp.spawn('ffmpeg', ['-y',
     //     '-f', 'image2pipe',
     //     '-s', '1920x1080',
@@ -51,7 +55,8 @@ const fs = require('fs');
             // }))
 
             var img = await page.screenshot({ type: 'png',omitBackground: true })
-            fs.writeFileSync(`./imgs/${frame}.png`, img)
+            // fs.writeFileSync(`./imgs/${frame}.png`, img)
+            fs.writeFileSync(`./imgs_thumb/${frame}.png`, img)
 
             frameCount++
             console.log('rendered', frameCount, frame)

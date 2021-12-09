@@ -37,16 +37,43 @@ function md2html(md) {
     .join("");
 }
 
+// var noWrapList = [
+//   "大型資訊",
+//   "鯉魚教の教主崇拜分析",
+//   "有愛就沒把專案做出來，對吧",
+//   "這次換駭客當鬼來抓你了",
+//   "從零開始打造多維",
+//   "是不是吃錯藥",
+//   "指令式編程程式碼",
+//   "以資訊專長跳脫傳統升學體制",
+//   "聚集在一起吧",
+//   "架個網站不想花錢",
+//   "幫忙操控電腦嗎",
+//   "和他的困難點",
+//   "獻上你的肝",
+//   "自由與責任",
+//   "自我意識",
+//   "淺談 IB-AR 技術",
+//   "你也可以是 CIO",
+//   "要不要試試 Flutter?",
+//   "邁出 Windows",
+//   "演算法對其的影響",
+//   "金融型男主管",
+//   "我們一起放棄社群的時刻",
+
+// ];
+
 var noWrapList = [
   "大型資訊",
-  "鯉魚教の教主崇拜分析",
-  "有愛就沒把專案做出來，對吧",
-  "這次換駭客當鬼來抓你了",
-  "從零開始打造多維",
-  "是不是吃錯藥",
-  "指令式編程程式碼",
-  "以資訊專長跳脫傳統升學體制",
-  "聚集在一起吧",
+  "鯉魚教の",
+  "教主崇拜分析",
+  "對吧",
+  "這次換駭客當鬼",
+  "來抓你了",
+  "從零開始",
+  "是不是",
+  "以資訊專長跳脫",
+  "傳統升學體制",
   "架個網站不想花錢",
   "幫忙操控電腦嗎",
   "和他的困難點",
@@ -55,23 +82,31 @@ var noWrapList = [
   "自我意識",
   "淺談 IB-AR 技術",
   "你也可以是 CIO",
-  "要不要試試 Flutter?",
-  "邁出 Windows",
+  "要不要試試 Flutter",
+  "給我一個",
+  "的理由",
+  "我想說的是",
   "演算法對其的影響",
   "金融型男主管",
-  "我們一起放棄社群的時刻",
-  
+  "自己蓋",
+  "最深的海溝",
+  "關鍵下一步",
+  "做密室逃脫就上手",
+  "溫馴的繩嗎",
+  "吃錯藥了呢"
 ];
 
 function FixTitle(title) {
   noWrapList.map((word) => {
     title = title.replace(new RegExp(word, "g"), [...word].join("\uFEFF"));
   });
+
+  if(title.startsWith("論壇")) return title.split('-')[1].trim()
   return title;
 }
 
 var puppeteer;
-window.i = 0;
+window.i = 32;
 
 var app = new Vue({
   el: "#app",
@@ -86,7 +121,10 @@ var app = new Vue({
     type: "",
     tags: [],
     data: {},
-    i: 0,
+    i: window.i ,
+    room: "",
+    fallback: "",
+    filename: "",
   },
   methods: {
     set(i) {
@@ -99,6 +137,8 @@ var app = new Vue({
       console.log("current session", session);
 
       this.title = FixTitle(session.zh.title);
+
+
 
       this.desc = md2html(session.zh.description);
 
@@ -142,9 +182,31 @@ var app = new Vue({
         tags_table[tag.id] = tag;
       });
 
-      this.tags = session.tags.map((x) => tags_table[x].zh.name);
+      this.tags = session.tags
+        .map((x) => tags_table[x].zh.name)
+        .filter((x) => x != "開放式議程" && x != "Keynote");
 
       this.i = i;
+
+      this.room = session.room;
+
+      var room = this.session.room;
+      var start = this.start.replace(":", "");
+      var end = this.end.replace(":", "");
+
+      
+
+      this.filename =
+        room +
+        "_" +
+        start +
+        "_" +
+        end +
+        "_" +
+        this.session.zh.title.replace(/[？?\n\sの]/g, "_");
+
+      this.fallback = "./fallbacks/" + this.filename + ".png";
+
       this.checkLoad();
     },
     loaded(speaker) {
@@ -157,22 +219,11 @@ var app = new Vue({
       var i = this.i;
 
       if (this.speakers.every((x) => x.loaded)) {
+        console.log("loaded");
         var me = this;
         setTimeout(() => {
           if (puppeteer) {
-            var room = me.session.room;
-            var start = me.start.replace(":", "");
-            var end = me.end.replace(":", "");
-
-            pup_render(
-              room +
-                "_" +
-                start +
-                "_" +
-                end +
-                "_" +
-                me.session.zh.title.replace(/[？?\n\sの]/g, "_")
-            ).then(function () {
+            pup_render(me.filename).then(function () {
               setTimeout(() => {
                 me.set(i + 1);
               }, 10);
@@ -182,7 +233,7 @@ var app = new Vue({
               this.set(window.i);
             }, 100);
           }
-        }, 100);
+        }, 500);
       }
     },
   },

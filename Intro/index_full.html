@@ -9,7 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css?family=Noto+Sans+TC:400,900"
         rel="stylesheet">
-    <link rel="stylesheet" href="./style_thumb.css">
+    <link rel="stylesheet" href="./style.css">
     <style>
         html,
         body {
@@ -29,35 +29,23 @@
 <body>
     <div id="app">
         <div class="content">
-            <div class="fallback" :style="{
-            backgroundImage: `url('${fallback}')`
-        }"></div>
-
-            <div class="room">
-                {{room}}
-            </div>
-
 
             <div class="main">
                 <h3>
-                    <!-- {{start}} ~ {{end}}  -->
+                    {{start}} ~ {{end}} 
 
-
+                    <!-- <span class="type">
+                        {{type}}
+                    </span> -->
 
                 </h3>
                 <div class="tags">
-
-                    <span class="tag">
-                        {{type}}
-                    </span>
-                </div>
-                <!-- <div class="tags">
                     <template v-for="tag in tags">
                         <span class="tag">
                             {{tag}}
                         </span>
                     </template>
-                </div> -->
+                </div>
                 <h1>{{title}} </h1>
                 <!-- <p v-html="desc">
                 </p> -->
@@ -66,8 +54,7 @@
                 <div v-for="speaker in speakers"
                     class="speaker">
                     <img :src="speaker.avatar"
-                        class="avatar"
-                        @load="loaded(speaker)" alt="">
+                        class="avatar"  @load="loaded(speaker)" alt="">
                     <h2> {{speaker.name}} </h2>
                     <!-- <p v-html="speaker.bio"> -->
                     </p>
